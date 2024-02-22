@@ -1,4 +1,6 @@
 package chess_ant;
+
+//file này để in ra bàn cờ dưới dạng text 
 public class printBoard {
     public static void printBoard(String[][] board) {
         for (int i = 0; i < 8; i++) {
