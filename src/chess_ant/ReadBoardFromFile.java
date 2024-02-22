@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-//file này để cập nhật bàn cờ cho board.txt bằng hàm ReadBoardFromFile()
+//file này để lấy dữ liệu bàn cờ từ board.txt bằng hàm ReadBoardFromFile()
 public class ReadBoardFromFile {
     public static void main(String[] args) {
         String[][] board = new String[8][8];
