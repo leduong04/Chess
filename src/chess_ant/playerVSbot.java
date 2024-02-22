@@ -2,7 +2,7 @@ package chess_ant;
 
 import javax.swing.JOptionPane;
 
-public class ChessBoardGUI {
+public class playerVSbot {
     public static void main(String[] args) {
         boolean playersChoice = false; 
         while (!playersChoice) { 
