@@ -6,7 +6,6 @@ public class printBoard {
             for (int j = 0; j < 8; j++) {
 
                 if (board[i][j].equals("| |")) {
-                    // System.out.print(" ");
                     System.out.print("  ");
                 }
 
