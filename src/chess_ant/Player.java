@@ -71,7 +71,7 @@ public class Player extends JFrame {
 
     private void updateBoardFromFile() {
         try {
-            Scanner scanner = new Scanner(new File("board.txt"));
+            Scanner scanner = new Scanner(new File("src\\chess_ant\\board.txt"));
 
             for (int i = 0; i < 8; i++) {
                 if (scanner.hasNextLine()) {
@@ -137,51 +137,51 @@ public class Player extends JFrame {
     private String getPieceImagePath(String piece) {
         String path = "";
         if ("P".equals(piece)) {
-            path = "img\\Black_Pawn.png";
+            path = "src\\chess_ant\\img\\Black_Pawn.png";
         }
 
         if ("B".equals(piece)) {
-            path = "img\\Black_Bishop.png";
+            path = "src\\chess_ant\\img\\Black_Bishop.png";
         }
 
         if ("K".equals(piece)) {
-            path = "img\\Black_King.png";
+            path = "src\\chess_ant\\img\\Black_King.png";
         }
 
         if ("Q".equals(piece)) {
-            path = "img\\Black_Queen.png";
+            path = "src\\chess_ant\\img\\Black_Queen.png";
         }
 
         if ("R".equals(piece)) {
-            path = "img\\Black_Rook.png";
+            path = "src\\chess_ant\\img\\Black_Rook.png";
         }
 
         if ("N".equals(piece)) {
-            path = "img\\Black_Knight.png";
+            path = "src\\chess_ant\\img\\Black_Knight.png";
         }
 
         if ("p".equals(piece)) {
-            path = "img\\White_Pawn.png";
+            path = "src\\chess_ant\\img\\White_Pawn.png";
         }
 
         if ("b".equals(piece)) {
-            path = "img\\White_Bishop.png";
+            path = "src\\chess_ant\\img\\White_Bishop.png";
         }
 
         if ("k".equals(piece)) {
-            path = "img\\White_King.png";
+            path = "src\\chess_ant\\img\\White_King.png";
         }
 
         if ("q".equals(piece)) {
-            path = "img\\White_Queen.png";
+            path = "src\\chess_ant\\img\\White_Queen.png";
         }
 
         if ("r".equals(piece)) {
-            path = "img\\White_Rook.png";
+            path = "src\\chess_ant\\img\\White_Rook.png";
         }
 
         if ("n".equals(piece)) {
-            path = "img\\White_Knight.png";
+            path = "src\\chess_ant\\img\\White_Knight.png";
         }
         return path;
     }

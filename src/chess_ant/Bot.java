@@ -19,7 +19,7 @@ public class Bot {
             WriteBoardToFile.WriteBoardToFile(previousBoardState);
         } else {
             previousBoardState = readBoardFromFile(
-                    "board.txt");
+                    "src\\chess_ant\\board.txt");
         }
         while (true) {
             try {
@@ -29,7 +29,7 @@ public class Bot {
             }
 
             String[][] currentBoardState = readBoardFromFile(
-                    "board.txt");
+                    "src\\chess_ant\\board.txt");
 
             if (isBoardStateChanged(currentBoardState)) {
                 Chess_AI.Chess_AI(currentBoardState, bot);
@@ -98,7 +98,7 @@ public class Bot {
         //
 
         // previousBoardState =
-        // readBoardFromFile("img\\Draft_17_11\\Draft_15_02\\board.txt");
+        // readBoardFromFile("src\\chess_ant\\img\\Draft_17_11\\Draft_15_02\\board.txt");
 
         while (true) {
             try {
@@ -108,7 +108,7 @@ public class Bot {
             }
 
             String[][] currentBoardState = readBoardFromFile(
-                    "board.txt");
+                    "src\\chess_ant\\board.txt");
 
             if (isBoardStateChanged(currentBoardState)) {
                 Chess_AI.Chess_AI(currentBoardState, -1);

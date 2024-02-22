@@ -18,7 +18,7 @@ public class WriteBoardToFile {
         };
 
         try {
-            FileWriter writer = new FileWriter("board.txt");
+            FileWriter writer = new FileWriter("src\\chess_ant\\board.txt");
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     writer.write(board[i][j]);
@@ -48,7 +48,7 @@ public class WriteBoardToFile {
 
 
         try {
-            FileWriter writer = new FileWriter("board.txt");
+            FileWriter writer = new FileWriter("src\\chess_ant\\board.txt");
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     writer.write(board[i][j]);

@@ -9,7 +9,7 @@ public class ReadBoardFromFile {
         String[][] board = new String[8][8];
 
         try {
-            Scanner scanner = new Scanner(new File("board.txt"));
+            Scanner scanner = new Scanner(new File("src\\chess_ant\\board.txt"));
 
             for (int i = 0; i < 8; i++) {
                 if (scanner.hasNextLine()) {
@@ -43,7 +43,7 @@ public class ReadBoardFromFile {
         String[][] board = new String[8][8];
 
         try {
-            Scanner scanner = new Scanner(new File("board.txt"));
+            Scanner scanner = new Scanner(new File("src\\chess_ant\\board.txt"));
 
             for (int i = 0; i < 8; i++) {
                 if (scanner.hasNextLine()) {
