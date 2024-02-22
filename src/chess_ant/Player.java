@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+//file này thực thi các nước của người chơi và hiển thị giao diện bàn cờ
 public class Player extends JFrame {
     private JLabel[][] chessCells = new JLabel[8][8];
     private String[][] boardState = new String[8][8];
