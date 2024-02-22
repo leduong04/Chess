@@ -2,9 +2,10 @@ package chess_ant;
 import java.io.FileWriter;
 import java.io.IOException;
 
+//file này để cập nhật bàn cờ cho board.txt bằng hàm WriteBoardToFile(String[][] board)
 public class WriteBoardToFile {
     public static void main(String[] args) {
-        // Khởi tạo mảng board
+        
         String[][] board = {
                 { "R", "N", "B", "Q", "K", "B", "N", "R" },
                 { "P", "P", "P", "P", "P", "P", "P", "P" },
