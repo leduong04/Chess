@@ -1,5 +1,6 @@
 package chess_ant;
 
+//file này thực hiện người đánh với máy
 import javax.swing.JOptionPane;
 
 public class playerVSbot {
