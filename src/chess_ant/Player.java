@@ -70,31 +70,35 @@ public class Player extends JFrame {
     }
 
     private void updateBoardFromFile() {
-        try {
-            Scanner scanner = new Scanner(new File("src\\chess_ant\\board.txt"));
+        // try {
+        //     Scanner scanner = new Scanner(new File("src\\chess_ant\\board.txt"));
 
-            for (int i = 0; i < 8; i++) {
-                if (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
+        //     for (int i = 0; i < 8; i++) {
+        //         if (scanner.hasNextLine()) {
+        //             String line = scanner.nextLine();
 
-                    String[] chars = line.split("");
-                    for (int j = 0; j < 8; j++) {
-                        if (chars[j].equals(" ")) {
-                            boardState[i][j] = "| |";
-                        } else {
-                            boardState[i][j] = chars[j];
-                        }
-                    }
-                }
-            }
+        //             String[] chars = line.split("");
+        //             for (int j = 0; j < 8; j++) {
+        //                 if (chars[j].equals(" ")) {
+        //                     boardState[i][j] = "| |";
+        //                 } else {
+        //                     boardState[i][j] = chars[j];
+        //                 }
+        //             }
+        //         }
+        //     }
 
             
-            scanner.close();
+        //     scanner.close();
 
-            updateChessBoard();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            
+
+        //     updateChessBoard();
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
+        boardState = ReadBoardFromFile.ReadBoardFromFile();
+        updateChessBoard();
     }
 
     private void updateChessBoard() {
@@ -105,6 +109,7 @@ public class Player extends JFrame {
                 chessCells[i][j].setIcon(icon);
             }
         }
+        whoWon.displayWinner(boardState);
     }
 
     private class ChessCellClickListener extends MouseAdapter {
@@ -128,6 +133,7 @@ public class Player extends JFrame {
                 fromCol = -1;
             }
         }
+        
     }
 
 

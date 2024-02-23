@@ -18,8 +18,7 @@ public class Bot {
             Chess_AI.Chess_AI(previousBoardState, -1);
             WriteBoardToFile.WriteBoardToFile(previousBoardState);
         } else {
-            previousBoardState = readBoardFromFile(
-                    "src\\chess_ant\\board.txt");
+            previousBoardState = ReadBoardFromFile.ReadBoardFromFile();
         }
         while (true) {
             try {
@@ -28,9 +27,8 @@ public class Bot {
                 e.printStackTrace();
             }
 
-            String[][] currentBoardState = readBoardFromFile(
-                    "src\\chess_ant\\board.txt");
-
+            String[][] currentBoardState = ReadBoardFromFile.ReadBoardFromFile();
+            whoWon.displayWinner(currentBoardState);
             if (isBoardStateChanged(currentBoardState)) {
                 Chess_AI.Chess_AI(currentBoardState, bot);
                 WriteBoardToFile.WriteBoardToFile(currentBoardState);
@@ -40,31 +38,31 @@ public class Bot {
         }
     }
 
-    private static String[][] readBoardFromFile(String filename) {
-        String[][] boardState = new String[8][8];
-        try {
-            Scanner scanner = new Scanner(new File(filename));
-            for (int i = 0; i < 8; i++) {
-                if (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
+    // private static String[][] readBoardFromFile(String filename) {
+    //     String[][] boardState = new String[8][8];
+    //     try {
+    //         Scanner scanner = new Scanner(new File(filename));
+    //         for (int i = 0; i < 8; i++) {
+    //             if (scanner.hasNextLine()) {
+    //                 String line = scanner.nextLine();
 
-                    // Chia dòng thành các ký tự và lưu vào mảng board
-                    String[] chars = line.split("");
-                    for (int j = 0; j < 8; j++) {
-                        if (chars[j].equals(" ")) {
-                            boardState[i][j] = "| |";
-                        } else {
-                            boardState[i][j] = chars[j];
-                        }
-                    }
-                }
-            }
-            scanner.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return boardState;
-    }
+    //                 // Chia dòng thành các ký tự và lưu vào mảng board
+    //                 String[] chars = line.split("");
+    //                 for (int j = 0; j < 8; j++) {
+    //                     if (chars[j].equals(" ")) {
+    //                         boardState[i][j] = "| |";
+    //                     } else {
+    //                         boardState[i][j] = chars[j];
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         scanner.close();
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return boardState;
+    // }
 
     private static boolean isBoardStateChanged(String[][] currentBoardState) {
         if (previousBoardState == null || previousBoardState.length != currentBoardState.length) {
@@ -107,8 +105,7 @@ public class Bot {
                 e.printStackTrace();
             }
 
-            String[][] currentBoardState = readBoardFromFile(
-                    "src\\chess_ant\\board.txt");
+            String[][] currentBoardState = ReadBoardFromFile.ReadBoardFromFile();
 
             if (isBoardStateChanged(currentBoardState)) {
                 Chess_AI.Chess_AI(currentBoardState, -1);

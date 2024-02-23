@@ -62,6 +62,8 @@ public class ReadBoardFromFile {
 
             scanner.close();
 
+            // whoWon.displayWinner(board);
+
             
         } catch (FileNotFoundException e) {
             System.err.println("Không tìm thấy tệp board.txt.");
