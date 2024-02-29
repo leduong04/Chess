@@ -26,7 +26,6 @@ public class WriteBoardToFile {
                 writer.write("\n");
             }
             writer.close();
-            System.out.println("Đã ghi mảng board vào tệp board.txt thành công.");
         } catch (IOException e) {
             System.err.println("Lỗi khi ghi vào tệp board.txt: " + e.getMessage());
         }
@@ -47,27 +46,30 @@ public class WriteBoardToFile {
 
 
 
-        try {
-            FileWriter writer = new FileWriter("src\\chess_ant\\board.txt");
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    writer.write(board[i][j]);
-                }
-                writer.write("\n");
-            }
-            writer.close();
-            System.out.println("Đã ghi mảng board vào tệp board.txt thành công.");
-        } catch (IOException e) {
-            System.err.println("Lỗi khi ghi vào tệp board.txt: " + e.getMessage());
-        }
-
-        for(int i=0; i<8; i++)
+        // if(whoWon.whoWon(ReadBoardFromFile.ReadBoardFromFile())==0)
+        if(0==0)
         {
-            for(int j=0; j<8; j++)
+            try {
+                FileWriter writer = new FileWriter("src\\chess_ant\\board.txt");
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        writer.write(board[i][j]);
+                    }
+                    writer.write("\n");
+                }
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("Lỗi khi ghi vào tệp board.txt: " + e.getMessage());
+            }
+    
+            for(int i=0; i<8; i++)
             {
-                if(board[i][j].equals(" "))
+                for(int j=0; j<8; j++)
                 {
-                    board[i][j]="| |";
+                    if(board[i][j].equals(" "))
+                    {
+                        board[i][j]="| |";
+                    }
                 }
             }
         }

@@ -3,7 +3,7 @@ package chess_ant;
 import javax.swing.JOptionPane;
 
 public class whoWon {
-    public static void displayWinner(String[][] board) {
+    public static int displayWinner(String[][] board) {
         int winner = whoWon(board);
         String message = "";
 
@@ -16,9 +16,11 @@ public class whoWon {
         if (!message.isEmpty()) {
             JOptionPane.showMessageDialog(null, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        return winner;
     }
 
-    private static int whoWon(String[][] board) {
+    public static int whoWon(String[][] board) {
         int k = 0;
         int K = 0;
 

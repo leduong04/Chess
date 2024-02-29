@@ -1,10 +1,8 @@
 package chess_ant;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
 
 //file này thực thi các nước của người chơi và hiển thị giao diện bàn cờ
 public class Player extends JFrame {
@@ -20,14 +18,13 @@ public class Player extends JFrame {
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(8, 8));
-
         initializeChessCells();
         updateBoardFromFile();
     }
 
     private void initializeChessCells() {
-        Color color1 = new Color(209, 139, 71); 
-        Color color2 = new Color(255, 206, 158); 
+        Color color1 = new Color(209, 139, 71);
+        Color color2 = new Color(255, 206, 158);
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -41,7 +38,7 @@ public class Player extends JFrame {
                     label.setBackground(color2);
                 }
 
-                label.setOpaque(true); 
+                label.setOpaque(true);
 
                 label.addMouseListener(new ChessCellClickListener(i, j));
 
@@ -50,7 +47,7 @@ public class Player extends JFrame {
                 label.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        label.setBackground(Color.YELLOW); 
+                        label.setBackground(Color.YELLOW);
                     }
 
                     @Override
@@ -70,33 +67,8 @@ public class Player extends JFrame {
     }
 
     private void updateBoardFromFile() {
-        // try {
-        //     Scanner scanner = new Scanner(new File("src\\chess_ant\\board.txt"));
 
-        //     for (int i = 0; i < 8; i++) {
-        //         if (scanner.hasNextLine()) {
-        //             String line = scanner.nextLine();
-
-        //             String[] chars = line.split("");
-        //             for (int j = 0; j < 8; j++) {
-        //                 if (chars[j].equals(" ")) {
-        //                     boardState[i][j] = "| |";
-        //                 } else {
-        //                     boardState[i][j] = chars[j];
-        //                 }
-        //             }
-        //         }
-        //     }
-
-            
-        //     scanner.close();
-
-            
-
-        //     updateChessBoard();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+        System.out.println("UPDATE");
         boardState = ReadBoardFromFile.ReadBoardFromFile();
         updateChessBoard();
     }
@@ -105,11 +77,12 @@ public class Player extends JFrame {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 String piece = boardState[i][j];
-                ImageIcon icon = new ImageIcon(getPieceImagePath(piece)); 
+                ImageIcon icon = new ImageIcon(getPieceImagePath(piece));
                 chessCells[i][j].setIcon(icon);
             }
         }
-        whoWon.displayWinner(boardState);
+        // whoWon.displayWinner(boardState);
+        // whoWon.displayWinner(ReadBoardFromFile.ReadBoardFromFile());
     }
 
     private class ChessCellClickListener extends MouseAdapter {
@@ -133,12 +106,7 @@ public class Player extends JFrame {
                 fromCol = -1;
             }
         }
-        
     }
-
-
-
-    
 
     private String getPieceImagePath(String piece) {
         String path = "";
@@ -192,6 +160,55 @@ public class Player extends JFrame {
         return path;
     }
 
+    // public static void main(int botInput) {
+    //     bot = botInput;
+    //     WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
+
+    //     SwingUtilities.invokeLater(() -> {
+    //         Player chessBoard = new Player();
+    //         chessBoard.setVisible(true);
+
+    //         Timer timer = new Timer(100, e -> {
+    //             chessBoard.updateBoardFromFile();
+    //             whoWon.displayWinner(ReadBoardFromFile.ReadBoardFromFile());
+    //         });
+    //         timer.start();
+    //     });
+    // }
+
+    // public static void main(int botInput) {
+    // bot = botInput;
+    // WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
+
+    // SwingUtilities.invokeLater(() -> {
+    // Player chessBoard = new Player();
+    // chessBoard.setVisible(true);
+
+    // Timer timer = new Timer(100, e -> {
+    // chessBoard.updateBoardFromFile();
+    // int result = whoWon.whoWon(ReadBoardFromFile.ReadBoardFromFile());
+
+    // if (result != 0) {
+    // String message = "";
+
+    // if (result == 1) {
+    // message = "Người chơi màu trắng đã chiến thắng!";
+    // } else if (result == -1) {
+    // message = "Người chơi màu đen đã chiến thắng!";
+    // }
+
+    // if (!message.isEmpty()) {
+    // JOptionPane.showMessageDialog(null, message, "Thông báo",
+    // JOptionPane.INFORMATION_MESSAGE);
+    // }
+    // ((Timer) e.getSource()).stop(); // Ngừng timer nếu kết quả không phải 0
+    // }
+    // });
+    // timer.start();
+    // });
+    // }
+
+
     public static void main(int botInput) {
         bot = botInput;
         WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
@@ -202,6 +219,7 @@ public class Player extends JFrame {
 
             Timer timer = new Timer(100, e -> {
                 chessBoard.updateBoardFromFile();
+                // whoWon.displayWinner(ReadBoardFromFile.ReadBoardFromFile());
             });
             timer.start();
         });
