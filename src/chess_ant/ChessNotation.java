@@ -48,10 +48,10 @@ public class ChessNotation {
         String beforeLastDot = cleanString.substring(0, lastDotIndex);
     
         int lastSpaceIndex = beforeLastDot.lastIndexOf(' ');
-        if (lastSpaceIndex == -1) {
-            System.out.println("Không tìm thấy dấu cách trong chuỗi số.");
-            return 0;
-        }
+        // if (lastSpaceIndex == -1) {
+        //     System.out.println("Không tìm thấy dấu cách trong chuỗi số.");
+        //     return 0;
+        // }
     
         String numberString = beforeLastDot.substring(lastSpaceIndex + 1);
     
@@ -93,6 +93,14 @@ public class ChessNotation {
     public static void rewriteFile(String filePath, String content) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void New() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src\\chess_ant\\Notation.txt"))) {
+            writer.write("");
         } catch (IOException e) {
             e.printStackTrace();
         }

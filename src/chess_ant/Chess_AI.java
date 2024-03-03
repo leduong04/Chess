@@ -137,6 +137,8 @@ public class Chess_AI {
         }
     
         makeMove(board, bestMove[0], bestMove[1], bestMove[2], bestMove[3]);
+        ChessNotation.ChessNotation(bestMove[0], bestMove[1], bestMove[2], bestMove[3], ChessNotation.readFromFile("src\\chess_ant\\Notation.txt"));
+
         // Trả về:
         // bestMove[0]: tọa độ hàng của quân được Chọn
         // bestMove[1]: tọa độ cột của quân được Chọn

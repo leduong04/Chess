@@ -68,7 +68,7 @@ public class Player extends JFrame {
 
     private void updateBoardFromFile() {
 
-        System.out.println("UPDATE");
+        // System.out.println("UPDATE");
         boardState = ReadBoardFromFile.ReadBoardFromFile();
         updateChessBoard();
     }
@@ -211,6 +211,7 @@ public class Player extends JFrame {
 
     public static void main(int botInput) {
         bot = botInput;
+        ChessNotation.New();
         WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
 
         SwingUtilities.invokeLater(() -> {
