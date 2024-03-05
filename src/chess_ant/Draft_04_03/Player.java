@@ -1,18 +1,16 @@
 package chess_ant.Draft_04_03;
+
+
 import javax.swing.*;
-
-
 import java.awt.*;
 import java.awt.event.*;
-
 import chess_ant.*;
 
-//file này thực thi các nước của người chơi và hiển thị giao diện bàn cờ
 public class Player extends JFrame {
-    private JLabel[][] chessCells = new JLabel[8][8];
+    private JButton[][] chessCells = new JButton[8][8];
     private String[][] boardState = new String[8][8];
     private int fromRow = -1, fromCol = -1;
-    public static int bot = 0;
+
     public Player() {
         setTitle("Real-time Chess Board");
         setSize(600, 600);
@@ -21,46 +19,52 @@ public class Player extends JFrame {
         initializeChessCells();
         updateBoardFromFile();
     }
+
     private void initializeChessCells() {
         Color color1 = new Color(209, 139, 71);
         Color color2 = new Color(255, 206, 158);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                JLabel label = new JLabel();
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setVerticalAlignment(SwingConstants.CENTER);
+                JButton button = new JButton();
+                button.setHorizontalAlignment(SwingConstants.CENTER);
+                button.setVerticalAlignment(SwingConstants.CENTER);
                 if ((i + j) % 2 == 0) {
-                    label.setBackground(color1);
+                    button.setBackground(color1);
                 } else {
-                    label.setBackground(color2);
+                    button.setBackground(color2);
                 }
-                label.setOpaque(true);
-                label.addMouseListener(new ChessCellClickListener(i, j));
+                button.setOpaque(true);
+                button.setBorderPainted(false);
+                button.setFocusPainted(false);
+                button.addActionListener(new ChessCellActionListener(i, j));
                 final int finalI = i;
                 final int finalJ = j;
-                label.addMouseListener(new MouseAdapter() {
+                button.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        label.setBackground(Color.YELLOW);
+                        button.setBackground(Color.YELLOW);
                     }
+
                     @Override
                     public void mouseExited(MouseEvent e) {
                         if ((finalI + finalJ) % 2 == 0) {
-                            label.setBackground(color1);
+                            button.setBackground(color1);
                         } else {
-                            label.setBackground(color2);
+                            button.setBackground(color2);
                         }
                     }
                 });
-                chessCells[i][j] = label;
-                getContentPane().add(label);
+                chessCells[i][j] = button;
+                getContentPane().add(button);
             }
         }
     }
+
     private void updateBoardFromFile() {
-        boardState=ReadBoardFromFile.ReadBoardFromFile();
+        boardState = ReadBoardFromFile.ReadBoardFromFile();
         updateChessBoard();
     }
+
     private void updateChessBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -68,15 +72,18 @@ public class Player extends JFrame {
                 ImageIcon icon = new ImageIcon(getPieceImagePath(piece));
                 chessCells[i][j].setIcon(icon);
             }
-        }        
+        }
     }
-    private class ChessCellClickListener extends MouseAdapter {
+
+    private class ChessCellActionListener implements ActionListener {
         private int row, col;
-        public ChessCellClickListener(int row, int col) {
+
+        public ChessCellActionListener(int row, int col) {
             this.row = row;
             this.col = col;
         }
-        public void mouseClicked(MouseEvent e) {
+
+        public void actionPerformed(ActionEvent e) {
             if (fromRow == -1 && fromCol == -1) {
                 fromRow = row;
                 fromCol = col;
@@ -89,41 +96,53 @@ public class Player extends JFrame {
             }
         }
     }
+
     private String getPieceImagePath(String piece) {
         String path = "";
         if ("P".equals(piece)) {
             path = "D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\img\\Black_Pawn.png";
         }
+
         if ("B".equals(piece)) {
             path = "src\\chess_ant\\img\\Black_Bishop.png";
         }
+
         if ("K".equals(piece)) {
             path = "src\\chess_ant\\img\\Black_King.png";
         }
+
         if ("Q".equals(piece)) {
             path = "src\\chess_ant\\img\\Black_Queen.png";
         }
+
         if ("R".equals(piece)) {
             path = "src\\chess_ant\\img\\Black_Rook.png";
         }
+
         if ("N".equals(piece)) {
             path = "src\\chess_ant\\img\\Black_Knight.png";
         }
+
         if ("p".equals(piece)) {
             path = "src\\chess_ant\\img\\White_Pawn.png";
         }
+
         if ("b".equals(piece)) {
             path = "src\\chess_ant\\img\\White_Bishop.png";
         }
+
         if ("k".equals(piece)) {
             path = "src\\chess_ant\\img\\White_King.png";
         }
+
         if ("q".equals(piece)) {
             path = "src\\chess_ant\\img\\White_Queen.png";
         }
+
         if ("r".equals(piece)) {
             path = "src\\chess_ant\\img\\White_Rook.png";
         }
+
         if ("n".equals(piece)) {
             path = "src\\chess_ant\\img\\White_Knight.png";
         }
@@ -141,4 +160,3 @@ public class Player extends JFrame {
         });
     }
 }
-
