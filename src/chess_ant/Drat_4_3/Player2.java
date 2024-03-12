@@ -1,7 +1,5 @@
 package chess_ant.Drat_4_3;
 
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -30,14 +28,17 @@ import java.io.Serializable;
 
 import chess_ant.*;
 
-public class Player extends JFrame {
+public class Player2 extends JFrame {
     private JButton[][] chessCells = new JButton[8][8];
     private String[][] boardState = new String[8][8];
     private int fromRow = -1, fromCol = -1;
 
     private static Socket socket;
     private static ObjectOutputStream outputStream;
-    public Player() {
+
+    public static boolean turn;
+
+    public Player2() {
         setTitle("Real-time Chess Board");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +61,7 @@ public class Player extends JFrame {
             e.printStackTrace();
         }
     }
+
     private void sendMoveToServer(int fromRow, int fromCol, int toRow, int toCol) {
         try {
             outputStream.writeObject(new Move(fromRow, fromCol, toRow, toCol));
@@ -68,12 +70,10 @@ public class Player extends JFrame {
         }
     }
 
-    private void sendBoard()
-    {
-        try{
+    private void sendBoard() {
+        try {
             outputStream.writeObject(concatenateBoard(ReadBoardToSend()));
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -82,7 +82,7 @@ public class Player extends JFrame {
         String[][] board = new String[8][8];
 
         try {
-            Scanner scanner = new Scanner(new File("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\board.txt"));
+            Scanner scanner = new Scanner(new File("src\\chess_ant\\Drat_4_3\\board2.txt"));
 
             for (int i = 0; i < 8; i++) {
                 if (scanner.hasNextLine()) {
@@ -103,6 +103,39 @@ public class Player extends JFrame {
 
             // whoWon.displayWinner(board);
 
+        } catch (FileNotFoundException e) {
+            System.err.println("Không tìm thấy tệp board.txt.");
+        }
+
+        return board;
+    }
+
+    public static String[][] ReadBoardFromFile() {
+        String[][] board = new String[8][8];
+
+        try {
+            Scanner scanner = new Scanner(new File("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt"));
+
+            for (int i = 0; i < 8; i++) {
+                if (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+
+                    String[] chars = line.split("");
+                    for (int j = 0; j < 8; j++) {
+                        if (chars[j].equals(" ")) {
+                            board[i][j] = "| |";
+                        } else {
+                            board[i][j] = chars[j];
+                        }
+                    }
+                }
+            }
+
+            scanner.close();
+
+            // whoWon.displayWinner(board);
+
+            
         } catch (FileNotFoundException e) {
             System.err.println("Không tìm thấy tệp board.txt.");
         }
@@ -164,7 +197,7 @@ public class Player extends JFrame {
     }
 
     private void updateBoardFromFile() {
-        boardState = ReadBoardFromFile.ReadBoardFromFile();
+        boardState = ReadBoardFromFile();
         updateChessBoard();
     }
 
@@ -174,6 +207,51 @@ public class Player extends JFrame {
                 String piece = boardState[i][j];
                 ImageIcon icon = new ImageIcon(getPieceImagePath(piece));
                 chessCells[i][j].setIcon(icon);
+            }
+        }
+    }
+
+
+    public static void WriteBoardToFile(String[][] board) {
+
+        for(int i=0; i<8; i++)
+        {
+            for(int j=0; j<8; j++)
+            {
+                if(board[i][j].equals("| |"))
+                {
+                    board[i][j]=" ";
+                }
+            }
+        }
+
+
+
+        // if(whoWon.whoWon(ReadBoardFromFile.ReadBoardFromFile())==0)
+        if(0==0)
+        {
+            try {
+                FileWriter writer = new FileWriter("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt");
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        writer.write(board[i][j]);
+                    }
+                    writer.write("\n");
+                }
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("Lỗi khi ghi vào tệp board.txt: " + e.getMessage());
+            }
+    
+            for(int i=0; i<8; i++)
+            {
+                for(int j=0; j<8; j++)
+                {
+                    if(board[i][j].equals(" "))
+                    {
+                        board[i][j]="| |";
+                    }
+                }
             }
         }
     }
@@ -193,10 +271,11 @@ public class Player extends JFrame {
             } else {
                 int toRow = row;
                 int toCol = col;
-                makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, -1);
-                // MessengerApp.sendMessage();
-                WriteBoardToFile.WriteBoardToFile(boardState);
-                sendBoard();
+                if (turn == true) {
+                    makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, 1);
+                    WriteBoardToFile(boardState);
+                    sendBoard();
+                }
                 fromRow = -1;
                 fromCol = -1;
             }
@@ -256,7 +335,7 @@ public class Player extends JFrame {
     }
 
     public static void WriteToTXT(String s) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("src\\chess_ant\\board.txt"))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("src\\chess_ant\\Drat_4_3\\board2.txt"))) {
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
                 if (c == '.') {
@@ -272,24 +351,29 @@ public class Player extends JFrame {
 
     public static void main(String[] args) {
         // socket = new Socket("localhost", 12345);
-        WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
+        WriteBoardToFile(initializeBoard.initializeBoard());
         SwingUtilities.invokeLater(() -> {
-            Player chessBoard = new Player();
+            Player2 chessBoard = new Player2();
             chessBoard.setVisible(true);
 
             Thread messageReceiverThread = new Thread(() -> {
                 try {
                     ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                    String player = (String) inputStream.readObject();
+                    if (player.equals("2"))
+                    {
+                        turn = false;
+                    }
                     while (true) {
 
                         String fromServer;
                         if ((fromServer = (String) inputStream.readObject()) != null) {
-                            // turn = true;
+                            turn = true;
                             // System.out.println(fromServer);
                             WriteToTXT(fromServer);
 
                         }
-                        
+
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -304,7 +388,6 @@ public class Player extends JFrame {
         });
     }
 }
-
 
 class Move implements Serializable {
     private static final long serialVersionUID = 1L;
