@@ -1,9 +1,9 @@
-package chess_ant.Drat_4_3;
+package chess_ant.Draft_04_03;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 
-public class Client {
+public class ChessClient {
     private static final String SERVER_IP = "localhost";
     private static final int SERVER_PORT = 12345;
 
@@ -13,10 +13,10 @@ public class Client {
     private String[][] previousBoardState;
 
     public static void main(String[] args) {
-        new Client();
+        new ChessClient();
     }
 
-    public Client() {
+    public ChessClient() {
         connectToServer();
         waitForBoardUpdate();
         waitForMessages();
@@ -37,7 +37,7 @@ public class Client {
             try {
                 while (true) {
                     Thread.sleep(1000); // Kiểm tra sự thay đổi mỗi giây
-                    String[][] currentBoard = readBoardFromFile("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\board.txt");
+                    String[][] currentBoard = readBoardFromFile("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt");
                     if (isBoardStateChanged(currentBoard)) {
                         sendBoard(currentBoard);
                     }
@@ -90,7 +90,7 @@ public class Client {
     }
 
     private void updateBoard(String boardString) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\board.txt"))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt"))) {
             String[] rows = boardString.split("\n");
             for (int i = 0; i < 8; i++) {
                 writer.println(rows[i]);
@@ -117,3 +117,4 @@ public class Client {
         return false;
     }
 }
+

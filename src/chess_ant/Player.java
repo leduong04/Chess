@@ -1,6 +1,9 @@
 package chess_ant;
 
 import javax.swing.*;
+
+import chess_ant.Draft_04_03.MessengerApp;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -100,7 +103,9 @@ public class Player extends JFrame {
             } else {
                 int toRow = row;
                 int toCol = col;
+
                 makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, bot);
+                // MessengerApp.sendMessage();
                 WriteBoardToFile.WriteBoardToFile(boardState);
                 fromRow = -1;
                 fromCol = -1;
@@ -211,8 +216,8 @@ public class Player extends JFrame {
 
     public static void main(int botInput) {
         bot = botInput;
-        ChessNotation.New();
-        WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
+        // ChessNotation.New();
+        // WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
 
         SwingUtilities.invokeLater(() -> {
             Player chessBoard = new Player();

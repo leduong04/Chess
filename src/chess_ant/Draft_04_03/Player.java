@@ -4,6 +4,12 @@ package chess_ant.Draft_04_03;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 import chess_ant.*;
 
 public class Player extends JFrame {
@@ -61,10 +67,42 @@ public class Player extends JFrame {
     }
 
     private void updateBoardFromFile() {
-        boardState = ReadBoardFromFile.ReadBoardFromFile();
+        boardState = ReadBoardFromFile();
         updateChessBoard();
     }
 
+    public static String[][] ReadBoardFromFile() {
+        String[][] board = new String[8][8];
+
+        try {
+            Scanner scanner = new Scanner(new File("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt"));
+
+            for (int i = 0; i < 8; i++) {
+                if (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+
+                    String[] chars = line.split("");
+                    for (int j = 0; j < 8; j++) {
+                        if (chars[j].equals(" ")) {
+                            board[i][j] = "| |";
+                        } else {
+                            board[i][j] = chars[j];
+                        }
+                    }
+                }
+            }
+
+            scanner.close();
+
+            // whoWon.displayWinner(board);
+
+            
+        } catch (FileNotFoundException e) {
+            System.err.println("Không tìm thấy tệp board.txt.");
+        }
+
+        return board;
+    }
     private void updateChessBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -90,9 +128,55 @@ public class Player extends JFrame {
             } else {
                 int toRow = row;
                 int toCol = col;
-
+                makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, 1);
+                // MessengerApp.sendMessage();
+                WriteBoardToFile(boardState);
                 fromRow = -1;
                 fromCol = -1;
+            }
+        }
+    }
+
+    public static void WriteBoardToFile(String[][] board) {
+
+        for(int i=0; i<8; i++)
+        {
+            for(int j=0; j<8; j++)
+            {
+                if(board[i][j].equals("| |"))
+                {
+                    board[i][j]=" ";
+                }
+            }
+        }
+
+
+
+        // if(whoWon.whoWon(ReadBoardFromFile.ReadBoardFromFile())==0)
+        if(0==0)
+        {
+            try {
+                FileWriter writer = new FileWriter("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt");
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        writer.write(board[i][j]);
+                    }
+                    writer.write("\n");
+                }
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("Lỗi khi ghi vào tệp board.txt: " + e.getMessage());
+            }
+    
+            for(int i=0; i<8; i++)
+            {
+                for(int j=0; j<8; j++)
+                {
+                    if(board[i][j].equals(" "))
+                    {
+                        board[i][j]="| |";
+                    }
+                }
             }
         }
     }
@@ -150,6 +234,7 @@ public class Player extends JFrame {
     }
 
     public static void main(String[] args) {
+        WriteBoardToFile(initializeBoard.initializeBoard());
         SwingUtilities.invokeLater(() -> {
             Player chessBoard = new Player();
             chessBoard.setVisible(true);

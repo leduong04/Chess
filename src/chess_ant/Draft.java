@@ -1,47 +1,78 @@
 package chess_ant;
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
+public class Draft {
 
-    
-    public class Draft {
-        public static void main(String[] args) {
-            String input = "1. e4 d5 2. exd5 Qxd5 3. Nc3 Qa5 4. d4 c6 5. Nf3 Bf5 6. Bd3 Bxd3 7. Qxd3 e6";
-    
-            // Tìm vị trí của dấu chấm cuối cùng
-            int lastDotIndex = input.lastIndexOf('.');
-    
-            // Kiểm tra nếu không tìm thấy dấu chấm
-            if (lastDotIndex == -1) {
-                System.out.println("Không tìm thấy dấu chấm trong chuỗi.");
-                return;
+    private static String previousBoardState;
+    private static String currentBoardState;
+    public static void main(String[] args) {
+        while(true)
+        {
+            currentBoardState = readBoardFromFile("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt");
+            if(isBoardStateChanged())
+            {
+                System.out.println("File changes");
+                // break;
             }
-    
-            // Lấy phần số trước dấu chấm cuối cùng
-            String beforeLastDot = input.substring(0, lastDotIndex);
-    
-            // Tìm vị trí của dấu cách cuối cùng trong phần số trước dấu chấm cuối cùng
-            int lastSpaceIndex = beforeLastDot.lastIndexOf(' ');
-    
-            // Kiểm tra nếu không tìm thấy dấu cách
-            if (lastSpaceIndex == -1) {
-                System.out.println("Không tìm thấy dấu cách trong chuỗi số.");
-                return;
-            }
-    
-            // Lấy phần số đứng trước dấu chấm cuối cùng
-            String numberString = beforeLastDot.substring(lastSpaceIndex + 1);
-    
-            // Kiểm tra xem chuỗi số có chứa các ký tự số không
-            if (isNumeric(numberString)) {
-                System.out.println("Số đứng trước dấu chấm cuối cùng: " + numberString);
-            } else {
-                System.out.println("Không có số đứng trước dấu chấm cuối cùng.");
-            }
-        }
-    
-        // Phương thức kiểm tra xem một chuỗi có chứa toàn ký tự số không
-        public static boolean isNumeric(String str) {
-            return str.matches("-?\\d+(\\.\\d+)?");
+
+            
         }
     }
+
+    private static boolean isBoardStateChanged() {
+        if(previousBoardState==null)
+        {
+            previousBoardState = currentBoardState;
+        }
+        
+        if (!previousBoardState.equals(currentBoardState)) {
+            previousBoardState = currentBoardState;
+            
+            System.out.println("Fuck-------------------------------------------------");
+            return true;
+        }
+        // System.out.println("No fuck");
+        return false;
+    }
+
+
+    // private static boolean isBoardStateChanged(String currentBoardState) {
+    //     String newBoardState = readBoardFromFile("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt");
+    //     if (!currentBoardState.equals(newBoardState)) {
+    //         // previousBoardState = newBoardState;
+    //         System.out.println("File changes");
+    //         return true;
+    //     }
+    //     return false;
+    // }
     
+    // private static boolean isBoardStateChanged(String currentBoardState) {
+    //     String newBoardState = readBoardFromFile("D:\\Project\\Project_Java\\Chess_Ant\\src\\chess_ant\\Drat_4_3\\board2.txt");
+    //     if (!currentBoardState.equals(newBoardState)) {
+    //         previousBoardState = newBoardState;
+    //         System.out.println("Fuck");
+    //         return true;
+    //     }
+    //     // System.out.println("No fuck");
+    //     return false;
+    // }
+
+    public static String readBoardFromFile(String filePath) {
+        StringBuilder boardContent = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                boardContent.append(line.trim());
+                boardContent.append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return boardContent.toString();
+    }
+}
