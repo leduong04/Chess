@@ -5,6 +5,21 @@ package chess_ant.Drat_4_3;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.io.Serializable;
+
 import chess_ant.*;
 
 public class Player extends JFrame {
@@ -12,6 +27,8 @@ public class Player extends JFrame {
     private String[][] boardState = new String[8][8];
     private int fromRow = -1, fromCol = -1;
 
+    private Socket socket;
+    private ObjectOutputStream outputStream;
     public Player() {
         setTitle("Real-time Chess Board");
         setSize(600, 600);
@@ -19,6 +36,28 @@ public class Player extends JFrame {
         setLayout(new GridLayout(8, 8));
         initializeChessCells();
         updateBoardFromFile();
+
+        connectToServer();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void connectToServer() {
+        try {
+            socket = new Socket("localhost", 12345);
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void sendMoveToServer(int fromRow, int fromCol, int toRow, int toCol) {
+        try {
+            outputStream.writeObject(new Move(fromRow, fromCol, toRow, toCol));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeChessCells() {
@@ -94,6 +133,7 @@ public class Player extends JFrame {
                 makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, -1);
                 // MessengerApp.sendMessage();
                 WriteBoardToFile.WriteBoardToFile(boardState);
+                sendMoveToServer(fromRow, fromCol, toRow, toCol);
                 fromRow = -1;
                 fromCol = -1;
             }
@@ -162,5 +202,34 @@ public class Player extends JFrame {
             });
             timer.start();
         });
+    }
+}
+
+
+class Move implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int fromRow, fromCol, toRow, toCol;
+
+    public Move(int fromRow, int fromCol, int toRow, int toCol) {
+        this.fromRow = fromRow;
+        this.fromCol = fromCol;
+        this.toRow = toRow;
+        this.toCol = toCol;
+    }
+
+    public int getFromRow() {
+        return fromRow;
+    }
+
+    public int getFromCol() {
+        return fromCol;
+    }
+
+    public int getToRow() {
+        return toRow;
+    }
+
+    public int getToCol() {
+        return toCol;
     }
 }

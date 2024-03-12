@@ -1,51 +1,76 @@
 package chess_ant.Drat_4_3;
 
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.Serializable;
 
 public class Server {
-    private ServerSocket serverSocket;
-    private Socket[] clients;
-    private int currentPlayer = 0;
+    private static final int SERVER_PORT = 12345;
 
-    public Server() {
+    public static void main(String[] args) {
         try {
-            serverSocket = new ServerSocket(12345);
-            clients = new Socket[2];
+            ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
+            System.out.println("Server is running...");
+            Socket clientSocket = serverSocket.accept();
+                System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
 
-            for (int i = 0; i < 2; i++) {
-                clients[i] = serverSocket.accept();
-                System.out.println("Player " + (i + 1) + " connected.");
-            }
-
-            ObjectOutputStream[] outs = new ObjectOutputStream[2];
-            ObjectInputStream[] ins = new ObjectInputStream[2];
-
-            for (int i = 0; i < 2; i++) {
-                outs[i] = new ObjectOutputStream(clients[i].getOutputStream());
-                ins[i] = new ObjectInputStream(clients[i].getInputStream());
-            }
-
-            // outs[0].writeObject("Player 1");
-            // outs[1].writeObject("Player 2");
+                // Tạo luồng đầu vào để đọc các đối tượng từ client
+                ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
             while (true) {
-                String[][] board = (String[][]) ins[currentPlayer].readObject();
-                if (board == null) {
-                    break;
-                }
+                
 
-                outs[currentPlayer].writeObject(board);
-                currentPlayer = 1 - currentPlayer;
+                // Đọc đối tượng Move từ client
+                Move move = (Move) inputStream.readObject();
+
+                // Xử lý thông tin từ client
+                int fromRow = move.getFromRow();
+                int fromCol = move.getFromCol();
+                int toRow = move.getToRow();
+                int toCol = move.getToCol();
+
+                // In thông tin từ client
+                System.out.println("Received move from client:");
+                System.out.println("From Row: " + fromRow + ", From Col: " + fromCol);
+                System.out.println("To Row: " + toRow + ", To Col: " + toCol);
+
+                // Thực hiện các hoạt động cần thiết với thông tin nhận được từ client
+
+                // Đóng kết nối với client
+                // clientSocket.close();
             }
-            serverSocket.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+}
+class Move implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int fromRow, fromCol, toRow, toCol;
 
-    public static void main(String[] args) {
-        new Server();
+    public Move(int fromRow, int fromCol, int toRow, int toCol) {
+        this.fromRow = fromRow;
+        this.fromCol = fromCol;
+        this.toRow = toRow;
+        this.toCol = toCol;
+    }
+
+    public int getFromRow() {
+        return fromRow;
+    }
+
+    public int getFromCol() {
+        return fromCol;
+    }
+
+    public int getToRow() {
+        return toRow;
+    }
+
+    public int getToCol() {
+        return toCol;
     }
 }
