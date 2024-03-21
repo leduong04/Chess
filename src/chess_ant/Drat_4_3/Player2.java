@@ -272,9 +272,18 @@ public class Player2 extends JFrame {
                 int toRow = row;
                 int toCol = col;
                 if (turn == true) {
-                    makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, 1);
-                    WriteBoardToFile(boardState);
-                    sendBoard();
+                    // makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, 1);
+                    // WriteBoardToFile(boardState);
+                    // sendBoard();
+
+                    // turn=false;
+
+                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, 1)==true)
+                    {
+                        WriteBoardToFile(boardState);
+                        sendBoard();
+                        turn=false;
+                    }
                 }
                 fromRow = -1;
                 fromCol = -1;

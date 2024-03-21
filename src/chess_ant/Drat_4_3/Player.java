@@ -1,7 +1,5 @@
 package chess_ant.Drat_4_3;
 
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -35,8 +33,11 @@ public class Player extends JFrame {
     private String[][] boardState = new String[8][8];
     private int fromRow = -1, fromCol = -1;
 
+    private static boolean turn = true;
+
     private static Socket socket;
     private static ObjectOutputStream outputStream;
+
     public Player() {
         setTitle("Real-time Chess Board");
         setSize(600, 600);
@@ -60,6 +61,7 @@ public class Player extends JFrame {
             e.printStackTrace();
         }
     }
+
     private void sendMoveToServer(int fromRow, int fromCol, int toRow, int toCol) {
         try {
             outputStream.writeObject(new Move(fromRow, fromCol, toRow, toCol));
@@ -68,12 +70,10 @@ public class Player extends JFrame {
         }
     }
 
-    private void sendBoard()
-    {
-        try{
+    private void sendBoard() {
+        try {
             outputStream.writeObject(concatenateBoard(ReadBoardToSend()));
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -193,10 +193,18 @@ public class Player extends JFrame {
             } else {
                 int toRow = row;
                 int toCol = col;
-                makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, -1);
-                // MessengerApp.sendMessage();
-                WriteBoardToFile.WriteBoardToFile(boardState);
-                sendBoard();
+                if (turn == true) {
+                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, -1)==true)
+                    {
+                        WriteBoardToFile.WriteBoardToFile(boardState);
+                        sendBoard();
+                        turn=false;
+                    }
+                    // WriteBoardToFile.WriteBoardToFile(boardState);
+                    // sendBoard();
+
+                    // turn=false;
+                }
                 fromRow = -1;
                 fromCol = -1;
             }
@@ -284,12 +292,12 @@ public class Player extends JFrame {
 
                         String fromServer;
                         if ((fromServer = (String) inputStream.readObject()) != null) {
-                            // turn = true;
+                            turn = true;
                             // System.out.println(fromServer);
                             WriteToTXT(fromServer);
 
                         }
-                        
+
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -304,7 +312,6 @@ public class Player extends JFrame {
         });
     }
 }
-
 
 class Move implements Serializable {
     private static final long serialVersionUID = 1L;
