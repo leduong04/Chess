@@ -34,11 +34,12 @@ public class Player extends JFrame {
     private int fromRow = -1, fromCol = -1;
 
     private static boolean turn = true;
-
+    private static int side;
     private static boolean done= false;
 
     private static Socket socket;
     private static ObjectOutputStream outputStream;
+
 
     public Player() {
         setTitle("Real-time Chess Board");
@@ -204,7 +205,7 @@ public class Player extends JFrame {
                 int toRow = row;
                 int toCol = col;
                 if (turn == true) {
-                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, -1)==true)
+                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, side)==true)
                     {
                         WriteBoardToFile.WriteBoardToFile(boardState);
                         sendBoard();
@@ -298,6 +299,15 @@ public class Player extends JFrame {
             Thread messageReceiverThread = new Thread(() -> {
                 try {
                     ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                    String player = (String) inputStream.readObject();
+                    if (player.equals("2"))
+                    {
+                        turn = false;
+                        side=-1;
+                    }
+                    else{
+                        side=1;
+                    }
                     while (true) {
 
                         String fromServer;

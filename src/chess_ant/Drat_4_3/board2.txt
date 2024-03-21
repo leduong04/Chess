@@ -1,8 +1,8 @@
-RNBQbBNR
-PP  PPPP
+RNBQ BNR
+PPPP PPP
+   KP   
         
-  P  p  
+   p    
     p   
-   P    
-pppp  pp
-rnbqk nr
+ppp  ppp
+rnbqkbnr

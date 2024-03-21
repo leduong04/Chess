@@ -37,7 +37,9 @@ public class Player2 extends JFrame {
     private static ObjectOutputStream outputStream;
 
     private static boolean done = false;
-    public static boolean turn;
+    private static boolean turn=true;
+    private static int side;
+
 
     public Player2() {
         setTitle("Real-time Chess Board");
@@ -287,7 +289,7 @@ public class Player2 extends JFrame {
 
                     // turn=false;
 
-                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, 1)==true)
+                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, side)==true)
                     {
                         WriteBoardToFile(boardState);
                         sendBoard();
@@ -380,7 +382,11 @@ public class Player2 extends JFrame {
                     String player = (String) inputStream.readObject();
                     if (player.equals("2"))
                     {
+                        side = -1;
                         turn = false;
+                    }
+                    else{
+                        side=1;
                     }
                     while (true) {
 

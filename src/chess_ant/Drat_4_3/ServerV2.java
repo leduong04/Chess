@@ -64,6 +64,7 @@ public class ServerV2 {
         @Override
         public void run() {
             try {
+                outputStream1.writeObject("1");
                 outputStream2.writeObject("2");
 
                 String message;
