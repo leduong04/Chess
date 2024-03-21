@@ -36,6 +36,7 @@ public class Player2 extends JFrame {
     private static Socket socket;
     private static ObjectOutputStream outputStream;
 
+    private static boolean done = false;
     public static boolean turn;
 
     public Player2() {
@@ -198,7 +199,15 @@ public class Player2 extends JFrame {
 
     private void updateBoardFromFile() {
         boardState = ReadBoardFromFile();
+
         updateChessBoard();
+
+        if(whoWon.whoWon(boardState)!=0 && done==false)
+        {
+            done=true;
+            whoWon.displayWinner(boardState);
+            
+        }
     }
 
     private void updateChessBoard() {
