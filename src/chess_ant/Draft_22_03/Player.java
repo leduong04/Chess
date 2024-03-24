@@ -52,7 +52,7 @@ public class Player extends JFrame {
 
     private static void connectToServer() {
         try {
-            socket = new Socket("localhost", 12345);
+            socket = new Socket("192.168.0.102", 12345);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
