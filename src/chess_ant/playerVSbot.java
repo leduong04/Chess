@@ -11,7 +11,28 @@ public class playerVSbot {
             int result = JOptionPane.showOptionDialog(null, "Chọn màu quân cờ bạn muốn chơi", "Chọn màu quân cờ",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
-            ChessNotation.New();
+            WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
+            if (result == 0) {
+                Player.main(1);
+                Bot.Bot(1);
+                playersChoice = true;
+            } else if (result == 1) {
+                Player.main(-1);
+                Bot.Bot(-1);
+                playersChoice = true;
+            } else if (result == 2) {
+                System.exit(0);
+            }
+        }
+    }
+
+    public static void playerVSbot() {
+        boolean playersChoice = false;
+        while (!playersChoice) {
+            String[] options = { "Trắng", "Đen", "Hủy" };
+            int result = JOptionPane.showOptionDialog(null, "Chọn màu quân cờ bạn muốn chơi", "Chọn màu quân cờ",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
             WriteBoardToFile.WriteBoardToFile(initializeBoard.initializeBoard());
             if (result == 0) {
                 Player.main(1);
