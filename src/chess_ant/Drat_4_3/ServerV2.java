@@ -5,12 +5,35 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerV2 {
     private static final int SERVER_PORT = 12345;
     private static List<ClientHandler> clients = new ArrayList<>();
+
+    private static boolean insertGameData(String player1id, String player2id) {
+        boolean success = false;
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chess", "root",
+                "")) {
+            String sql = "INSERT INTO games (player1id, player2id) VALUES (?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, player1id);
+                pstmt.setString(2, player2id);
+                int rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    success = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 
     public static void main(String[] args) {
         try {
@@ -22,20 +45,16 @@ public class ServerV2 {
                 System.out.println("Client connected: " + clientSocket_1.getInetAddress().getHostAddress());
                 ObjectInputStream inputStream_1 = new ObjectInputStream(clientSocket_1.getInputStream());
                 ObjectOutputStream outputStream_1 = new ObjectOutputStream(clientSocket_1.getOutputStream());
-                // outputStream_1.writeObject("1");
 
                 Socket clientSocket_2 = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket_2.getInetAddress().getHostAddress());
                 ObjectInputStream inputStream_2 = new ObjectInputStream(clientSocket_2.getInputStream());
                 ObjectOutputStream outputStream_2 = new ObjectOutputStream(clientSocket_2.getOutputStream());
-                // outputStream_2.writeObject("2");
 
-                // Tạo và lưu trữ một cặp client mới
                 ClientHandler clientHandler = new ClientHandler(clientSocket_1, inputStream_1, outputStream_1,
                         clientSocket_2, inputStream_2, outputStream_2);
                 clients.add(clientHandler);
 
-                // Bắt đầu xử lý cặp client mới
                 Thread thread = new Thread(clientHandler);
                 thread.start();
             }
@@ -65,44 +84,31 @@ public class ServerV2 {
         @Override
         public void run() {
             try {
-                
 
-                // // Nhận userid từ client thứ nhất
-                // String player1id = (String) inputStream1.readObject();
-                // System.out.println("player1id=" + player1id);
-
-                // // Gửi userid của client thứ nhất cho client thứ hai
-                // outputStream2.writeObject(player1id);
-
-                // // Nhận userid từ client thứ hai
-                // String player2id = (String) inputStream2.readObject();
-                // System.out.println("player2id=" + player2id);
-
-                // // Gửi userid của client thứ hai cho client thứ nhất
-                // outputStream1.writeObject(player2id);
                 outputStream1.writeObject("1");
                 String player1id = (String) inputStream1.readObject();
                 System.out.println("player1id=" + player1id);
 
-                
-
                 outputStream2.writeObject("2");
                 String player2id = (String) inputStream2.readObject();
                 System.out.println("player2id=" + player2id);
-                
-                
+
                 outputStream2.writeObject(player1id);
                 outputStream1.writeObject(player2id);
 
+                if (insertGameData(player1id, player2id)) {
+                    System.out.println("Insert thành công!");
+                } else {
+                    System.out.println("Insert thất bại!");
+                }
+
                 String message;
                 while (true) {
-                    // Đọc tin nhắn từ client thứ nhất và gửi cho client thứ 2
                     if ((message = (String) inputStream1.readObject()) != null) {
                         System.out.println("Client 1: " + message);
                         outputStream2.writeObject(message);
                     }
 
-                    // Đọc tin nhắn từ client thứ 2 và gửi cho client thứ nhất
                     if ((message = (String) inputStream2.readObject()) != null) {
                         System.out.println("Client 2: " + message);
                         outputStream1.writeObject(message);
