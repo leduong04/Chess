@@ -2,7 +2,6 @@ package chess_ant;
 
 import javax.swing.*;
 
-import chess_ant.Draft_04_03.MessengerApp;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -13,7 +12,7 @@ public class Draft2 extends JFrame {
     private static String[][] boardState = new String[8][8];
     private int fromRow = -1, fromCol = -1;
     public static int bot = 0;
-    public static boolean first=true;
+    public static boolean turn;
     // bot = 1: Bot is Black
     // bot = -1: Bot is White
 
@@ -103,9 +102,9 @@ public class Draft2 extends JFrame {
         boardState[7][5] = "b";
         boardState[7][6] = "n";
         boardState[7][7] = "r";
-        if(bot==-1)
-        {
+        if (bot == -1) {
             Chess_AI.Chess_AI(boardState, -1);
+            turn=true;
         }
         updateChessBoard();
     }
@@ -137,19 +136,21 @@ public class Draft2 extends JFrame {
             } else {
                 int toRow = row;
                 int toCol = col;
+                if (whoWon.displayWinner(boardState) == 0 && turn == true) {
+                    if (makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, bot))
 
-                // makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, bot);
-                // WriteBoardToFile.WriteBoardToFile(boardState);
-                System.out.println(toCol);
-                boardState[toRow][toCol]=boardState[fromRow][fromCol];
-                boardState[fromRow][fromCol]="| |";
-                printBoard.printBoard(boardState);
-                updateChessBoard();
+                    {
+                        updateChessBoard();
+                        turn = false;
+                    }
+                }
 
-                Chess_AI.Chess_AI(boardState, -1);
+                if (whoWon.displayWinner(boardState) == 0 && turn == false) {
+                    Chess_AI.Chess_AI(boardState, bot);
 
-                updateChessBoard();
-
+                    updateChessBoard();
+                    turn = true;
+                }
 
                 fromRow = -1;
                 fromCol = -1;
@@ -214,6 +215,11 @@ public class Draft2 extends JFrame {
         // Bot.Bot(-1);
 
         bot = botInput;
+        if (bot == 1) {
+            turn = true;
+        } else {
+            turn = false;
+        }
 
         SwingUtilities.invokeLater(() -> {
             Draft2 chessBoard = new Draft2();
@@ -221,13 +227,13 @@ public class Draft2 extends JFrame {
 
             // if(bot==-1&&first==true)
             // {
-            //     for(int i=0; i<100000; i++)
-            //     {
-            //         System.out.println(i);
-            //     }
-            //     Chess_AI.Chess_AI(boardState, -1);
-            //     updateChessBoard();
-            //     first=false;
+            // for(int i=0; i<100000; i++)
+            // {
+            // System.out.println(i);
+            // }
+            // Chess_AI.Chess_AI(boardState, -1);
+            // updateChessBoard();
+            // first=false;
             // }
         });
     }
