@@ -1,17 +1,102 @@
 package chess_ant;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Server2P {
     private static final int SERVER_PORT = 12345;
     private static List<ClientHandler> clients = new ArrayList<>();
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/projectjava";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+
+
+    public static int getUserElo(String userId) {
+        int elo = 0;
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
+            String sql = "SELECT elo FROM users WHERE userid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, userId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        elo = rs.getInt("elo");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return elo;
+    }
+    public static void updateElo(String userId, int newElo) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
+            String sql = "UPDATE users SET elo = ? WHERE userid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, newElo);
+                pstmt.setString(2, userId);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private static boolean insertGameData(String player1id, String player2id, String winnerid, String FEN) {
+        boolean success = false;
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
+            String sql = "INSERT INTO games (player1id, player2id, winnerid, FEN) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, player1id);
+                pstmt.setString(2, player2id);
+                pstmt.setString(3, winnerid); // Thêm winnerid vào câu lệnh SQL
+                pstmt.setString(4, FEN);
+                int rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    success = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+    
+
+    public static boolean checkWhiteWin(String input) {
+        // Kiểm tra từng ký tự trong chuỗi
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            // Nếu ký tự là 'K' hoa, trả về true
+            if (ch == 'K') {
+                return false;
+            }
+        }
+        // Nếu không tìm thấy chữ 'K' hoa trong chuỗi, trả về false
+        return true;
+    }
+
+    public static boolean checkBlackWin(String input) {
+        // Kiểm tra từng ký tự trong chuỗi
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            // Nếu ký tự là 'K' hoa, trả về true
+            if (ch == 'k') {
+                return false;
+            }
+        }
+        // Nếu không tìm thấy chữ 'K' hoa trong chuỗi, trả về false
+        return true;
+    }
 
     public static void main(String[] args) {
         try {
@@ -21,21 +106,18 @@ public class Server2P {
             while (true) {
                 Socket clientSocket_1 = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket_1.getInetAddress().getHostAddress());
-
                 ObjectInputStream inputStream_1 = new ObjectInputStream(clientSocket_1.getInputStream());
                 ObjectOutputStream outputStream_1 = new ObjectOutputStream(clientSocket_1.getOutputStream());
 
                 Socket clientSocket_2 = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket_2.getInetAddress().getHostAddress());
-
                 ObjectInputStream inputStream_2 = new ObjectInputStream(clientSocket_2.getInputStream());
                 ObjectOutputStream outputStream_2 = new ObjectOutputStream(clientSocket_2.getOutputStream());
 
-                // Tạo và lưu trữ một cặp client mới
-                ClientHandler clientHandler = new ClientHandler(clientSocket_1, inputStream_1, outputStream_1, clientSocket_2, inputStream_2, outputStream_2);
+                ClientHandler clientHandler = new ClientHandler(clientSocket_1, inputStream_1, outputStream_1,
+                        clientSocket_2, inputStream_2, outputStream_2);
                 clients.add(clientHandler);
 
-                // Bắt đầu xử lý cặp client mới
                 Thread thread = new Thread(clientHandler);
                 thread.start();
             }
@@ -53,7 +135,7 @@ public class Server2P {
         private ObjectOutputStream outputStream2;
 
         public ClientHandler(Socket clientSocket1, ObjectInputStream inputStream1, ObjectOutputStream outputStream1,
-                            Socket clientSocket2, ObjectInputStream inputStream2, ObjectOutputStream outputStream2) {
+                Socket clientSocket2, ObjectInputStream inputStream2, ObjectOutputStream outputStream2) {
             this.clientSocket1 = clientSocket1;
             this.inputStream1 = inputStream1;
             this.outputStream1 = outputStream1;
@@ -65,21 +147,61 @@ public class Server2P {
         @Override
         public void run() {
             try {
+
                 outputStream1.writeObject("1");
+                String player1id = (String) inputStream1.readObject();
+                System.out.println("player1id=" + player1id);
+
                 outputStream2.writeObject("2");
+                String player2id = (String) inputStream2.readObject();
+                System.out.println("player2id=" + player2id);
+
+                outputStream2.writeObject(player1id);
+                outputStream1.writeObject(player2id);
+
+                int elo1=getUserElo(player1id);
+                int elo2=getUserElo(player2id);
+
 
                 String message;
                 while (true) {
-                    // Đọc tin nhắn từ client thứ nhất và gửi cho client thứ 2
                     if ((message = (String) inputStream1.readObject()) != null) {
                         System.out.println("Client 1: " + message);
                         outputStream2.writeObject(message);
+                        if(checkWhiteWin(message))
+                        {
+                            if (insertGameData(player1id, player2id, player1id, message)) {
+                                System.out.println("Insert thành công!");
+                            } else {
+                                System.out.println("Insert thất bại!");
+                            }
+
+
+                            updateElo(player1id, EloCalculator.calculateElo(elo1, elo2, 1));
+                            updateElo(player2id, EloCalculator.calculateElo(elo2,elo1,0));
+
+                            System.out.println("new elo1:"+EloCalculator.calculateElo(elo1, elo2, 1));
+                            System.out.println("new elo2:"+EloCalculator.calculateElo(elo2,elo1,0));
+                        }
                     }
 
-                    // Đọc tin nhắn từ client thứ 2 và gửi cho client thứ nhất
                     if ((message = (String) inputStream2.readObject()) != null) {
                         System.out.println("Client 2: " + message);
                         outputStream1.writeObject(message);
+
+                        if(checkBlackWin(message))
+                        {
+                            if (insertGameData(player1id, player2id, player2id, message)) {
+                                System.out.println("Insert thành công!");
+                            } else {
+                                System.out.println("Insert thất bại!");
+                            }
+                            updateElo(player1id, EloCalculator.calculateElo(elo1, elo2, 0));
+                            updateElo(player2id, EloCalculator.calculateElo(elo2,elo1,1));
+
+                            System.out.println("new elo1:"+EloCalculator.calculateElo(elo1, elo2, 0));
+                            System.out.println("new elo2:"+EloCalculator.calculateElo(elo2,elo1,1));
+                        }
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -95,4 +217,3 @@ public class Server2P {
         }
     }
 }
-
