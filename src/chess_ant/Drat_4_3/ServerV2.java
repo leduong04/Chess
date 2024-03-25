@@ -18,7 +18,7 @@ public class ServerV2 {
 
     private static boolean insertGameData(String player1id, String player2id, String winnerid) {
         boolean success = false;
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chess", "root", "")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projectjava", "root", "")) {
             String sql = "INSERT INTO games (player1id, player2id, winnerid) VALUES (?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, player1id);
