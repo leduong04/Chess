@@ -16,14 +16,14 @@ public class ServerV2 {
     private static final int SERVER_PORT = 12345;
     private static List<ClientHandler> clients = new ArrayList<>();
 
-    private static boolean insertGameData(String player1id, String player2id) {
+    private static boolean insertGameData(String player1id, String player2id, String winnerid) {
         boolean success = false;
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chess", "root",
-                "")) {
-            String sql = "INSERT INTO games (player1id, player2id) VALUES (?, ?)";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chess", "root", "")) {
+            String sql = "INSERT INTO games (player1id, player2id, winnerid) VALUES (?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, player1id);
                 pstmt.setString(2, player2id);
+                pstmt.setString(3, winnerid); // Thêm winnerid vào câu lệnh SQL
                 int rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
                     success = true;
@@ -33,6 +33,33 @@ public class ServerV2 {
             e.printStackTrace();
         }
         return success;
+    }
+    
+
+    public static boolean checkWhiteWin(String input) {
+        // Kiểm tra từng ký tự trong chuỗi
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            // Nếu ký tự là 'K' hoa, trả về true
+            if (ch == 'K') {
+                return false;
+            }
+        }
+        // Nếu không tìm thấy chữ 'K' hoa trong chuỗi, trả về false
+        return true;
+    }
+
+    public static boolean checkBlackWin(String input) {
+        // Kiểm tra từng ký tự trong chuỗi
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            // Nếu ký tự là 'K' hoa, trả về true
+            if (ch == 'k') {
+                return false;
+            }
+        }
+        // Nếu không tìm thấy chữ 'K' hoa trong chuỗi, trả về false
+        return true;
     }
 
     public static void main(String[] args) {
@@ -96,22 +123,35 @@ public class ServerV2 {
                 outputStream2.writeObject(player1id);
                 outputStream1.writeObject(player2id);
 
-                if (insertGameData(player1id, player2id)) {
-                    System.out.println("Insert thành công!");
-                } else {
-                    System.out.println("Insert thất bại!");
-                }
+                
 
                 String message;
                 while (true) {
                     if ((message = (String) inputStream1.readObject()) != null) {
                         System.out.println("Client 1: " + message);
                         outputStream2.writeObject(message);
+                        if(checkWhiteWin(message))
+                        {
+                            if (insertGameData(player1id, player2id, player1id)) {
+                                System.out.println("Insert thành công!");
+                            } else {
+                                System.out.println("Insert thất bại!");
+                            }
+                        }
                     }
 
                     if ((message = (String) inputStream2.readObject()) != null) {
                         System.out.println("Client 2: " + message);
                         outputStream1.writeObject(message);
+
+                        if(checkBlackWin(message))
+                        {
+                            if (insertGameData(player1id, player2id, player2id)) {
+                                System.out.println("Insert thành công!");
+                            } else {
+                                System.out.println("Insert thất bại!");
+                            }
+                        }
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

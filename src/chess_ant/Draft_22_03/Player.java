@@ -361,7 +361,7 @@ public class Player extends JFrame {
                         
 
                         // Gửi userid của client cho server
-                        outputStream.writeObject("id2");
+                        outputStream.writeObject("4");
 
                         String idEnemy=(String) inputStream.readObject();
                         
@@ -371,7 +371,7 @@ public class Player extends JFrame {
                         side = 1;
 
                         // // Gửi userid của client cho server
-                        outputStream.writeObject("id1");
+                        outputStream.writeObject("2");
 
                         // // Đọc userid của đối phương từ server
                         String idEnemy = (String) inputStream.readObject();
