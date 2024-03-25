@@ -16,14 +16,15 @@ public class ServerV2 {
     private static final int SERVER_PORT = 12345;
     private static List<ClientHandler> clients = new ArrayList<>();
 
-    private static boolean insertGameData(String player1id, String player2id, String winnerid) {
+    private static boolean insertGameData(String player1id, String player2id, String winnerid, String FEN) {
         boolean success = false;
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projectjava", "root", "")) {
-            String sql = "INSERT INTO games (player1id, player2id, winnerid) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO games (player1id, player2id, winnerid, FEN) VALUES (?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, player1id);
                 pstmt.setString(2, player2id);
                 pstmt.setString(3, winnerid); // Thêm winnerid vào câu lệnh SQL
+                pstmt.setString(4, FEN);
                 int rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
                     success = true;
@@ -132,7 +133,7 @@ public class ServerV2 {
                         outputStream2.writeObject(message);
                         if(checkWhiteWin(message))
                         {
-                            if (insertGameData(player1id, player2id, player1id)) {
+                            if (insertGameData(player1id, player2id, player1id, message)) {
                                 System.out.println("Insert thành công!");
                             } else {
                                 System.out.println("Insert thất bại!");
@@ -146,7 +147,7 @@ public class ServerV2 {
 
                         if(checkBlackWin(message))
                         {
-                            if (insertGameData(player1id, player2id, player2id)) {
+                            if (insertGameData(player1id, player2id, player2id, message)) {
                                 System.out.println("Insert thành công!");
                             } else {
                                 System.out.println("Insert thất bại!");
