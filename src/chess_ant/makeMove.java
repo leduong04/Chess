@@ -24,7 +24,6 @@ public class makeMove {
                 if (isValidMove.isValidMove(fromRow, fromCol, toRow, toCol, board)) {
                     board[toRow][toCol] = board[fromRow][fromCol];
                     board[fromRow][fromCol] = "| |";
-                    ChessNotation.ChessNotation(fromRow, fromCol, toRow, toCol, ChessNotation.readFromFile("src\\chess_ant\\Notation.txt"));
                     return true;
                 } else {
                     JOptionPane.showMessageDialog(null, "Nước đi không hợp lệ, hãy thực hiện lại");
