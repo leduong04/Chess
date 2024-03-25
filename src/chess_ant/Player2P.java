@@ -22,8 +22,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ObjectInputStream;
 
-import chess_ant.*;
-
 public class Player2P extends JFrame {
     private JButton[][] chessCells = new JButton[8][8];
     private String[][] boardState = new String[8][8];
@@ -350,9 +348,9 @@ public class Player2P extends JFrame {
     public static String getUsername(String userId) {
         String username = null;
         String sql = "SELECT username FROM users WHERE userid = ?";
-        
+
         try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -361,7 +359,7 @@ public class Player2P extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return username;
     }
 
@@ -375,44 +373,39 @@ public class Player2P extends JFrame {
             Thread messageReceiverThread = new Thread(() -> {
                 try {
                     ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                    // ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                    // ObjectOutputStream outputStream = new
+                    // ObjectOutputStream(socket.getOutputStream());
                     String player = (String) inputStream.readObject();
                     if (player.equals("2")) {
                         System.out.println("player 2");
                         side = -1;
                         turn = false;
 
-
                         // Đọc userid của đối phương từ server
-                        
 
                         // Gửi userid của client cho server
-                        outputStream.writeObject("4");
+                        outputStream.writeObject(String.valueOf(isLoggedin.isLoggedin()));
 
-                        String idEnemy=(String) inputStream.readObject();
-                        
+                        String idEnemy = (String) inputStream.readObject();
+
                         System.out.println("Id đối thủ: " + idEnemy);
-                        JOptionPane.showMessageDialog(null, "Đối thủ của bạn là "+getUsername(idEnemy));
-                        
+                        JOptionPane.showMessageDialog(null, "Đối thủ của bạn là " + getUsername(idEnemy));
+
                     } else {
                         System.out.println("player 1");
                         side = 1;
-                        // ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                        // ObjectOutputStream outputStream = new
+                        // ObjectOutputStream(socket.getOutputStream());
 
                         // // Gửi userid của client cho server
-                        outputStream.writeObject("2");
+                        outputStream.writeObject(String.valueOf(isLoggedin.isLoggedin()));
 
                         // // Đọc userid của đối phương từ server
                         String idEnemy = (String) inputStream.readObject();
                         System.out.println("Id đối thủ: " + idEnemy);
-                        JOptionPane.showMessageDialog(null, "Đối thủ của bạn là "+getUsername(idEnemy));
+                        JOptionPane.showMessageDialog(null, "Đối thủ của bạn là " + getUsername(idEnemy));
 
                     }
-
-
-
-                    
-
 
                     while (true) {
 
