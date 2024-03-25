@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +36,10 @@ public class Player extends JFrame {
     private static boolean turn = true;
     private static int side;
     private static String boardLink = "src\\chess_ant\\Draft_22_03\\board.txt";
+    private static final String URL = "jdbc:mysql://localhost:3306/projectjava";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "";
+
 
     public Player() {
         setTitle("Real-time Chess Board");
@@ -339,6 +348,24 @@ public class Player extends JFrame {
         }
     }
 
+    public static String getUsername(String userId) {
+        String username = null;
+        String sql = "SELECT username FROM users WHERE userid = ?";
+        
+        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return username;
+    }
+
     public static void main(String[] args) {
         // socket = new Socket("localhost", 12345);
         WriteBoardToFile(initializeBoard.initializeBoard());
@@ -366,6 +393,7 @@ public class Player extends JFrame {
                         String idEnemy=(String) inputStream.readObject();
                         
                         System.out.println("Id đối thủ: " + idEnemy);
+                        JOptionPane.showMessageDialog(null, "Đối thủ của bạn là "+getUsername(idEnemy));
                     } else {
                         System.out.println("player 1");
                         side = 1;
@@ -376,6 +404,7 @@ public class Player extends JFrame {
                         // // Đọc userid của đối phương từ server
                         String idEnemy = (String) inputStream.readObject();
                         System.out.println("Id đối thủ: " + idEnemy);
+                        JOptionPane.showMessageDialog(null, "Đối thủ của bạn là "+getUsername(idEnemy));
                     }
 
                     while (true) {
