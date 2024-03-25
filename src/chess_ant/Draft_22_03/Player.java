@@ -1,6 +1,5 @@
 package chess_ant.Draft_22_03;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -11,7 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,10 +28,9 @@ public class Player extends JFrame {
     private static ObjectOutputStream outputStream;
 
     private static boolean done = false;
-    private static boolean turn=true;
+    private static boolean turn = true;
     private static int side;
-    private static String boardLink="src\\chess_ant\\Draft_22_03\\board.txt";
-
+    private static String boardLink = "src\\chess_ant\\Draft_22_03\\board.txt";
 
     public Player() {
         setTitle("Real-time Chess Board");
@@ -52,7 +49,7 @@ public class Player extends JFrame {
 
     private static void connectToServer() {
         try {
-            socket = new Socket("192.168.0.102", 12345);
+            socket = new Socket("localhost", 12345);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,7 +121,6 @@ public class Player extends JFrame {
 
             // whoWon.displayWinner(board);
 
-            
         } catch (FileNotFoundException e) {
             System.err.println("Không tìm thấy tệp board.txt.");
         }
@@ -190,11 +186,10 @@ public class Player extends JFrame {
 
         updateChessBoard();
 
-        if(whoWon.whoWon(boardState)!=0 && done==false)
-        {
-            done=true;
+        if (whoWon.whoWon(boardState) != 0 && done == false) {
+            done = true;
             whoWon.displayWinner(boardState);
-            
+
         }
     }
 
@@ -208,25 +203,18 @@ public class Player extends JFrame {
         }
     }
 
-
     public static void WriteBoardToFile(String[][] board) {
 
-        for(int i=0; i<8; i++)
-        {
-            for(int j=0; j<8; j++)
-            {
-                if(board[i][j].equals("| |"))
-                {
-                    board[i][j]=" ";
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j].equals("| |")) {
+                    board[i][j] = " ";
                 }
             }
         }
 
-
-
         // if(whoWon.whoWon(ReadBoardFromFile.ReadBoardFromFile())==0)
-        if(true)
-        {
+        if (true) {
             try {
                 FileWriter writer = new FileWriter(boardLink);
                 for (int i = 0; i < 8; i++) {
@@ -239,14 +227,11 @@ public class Player extends JFrame {
             } catch (IOException e) {
                 System.err.println("Lỗi khi ghi vào tệp board.txt: " + e.getMessage());
             }
-    
-            for(int i=0; i<8; i++)
-            {
-                for(int j=0; j<8; j++)
-                {
-                    if(board[i][j].equals(" "))
-                    {
-                        board[i][j]="| |";
+
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (board[i][j].equals(" ")) {
+                        board[i][j] = "| |";
                     }
                 }
             }
@@ -275,11 +260,10 @@ public class Player extends JFrame {
 
                     // turn=false;
 
-                    if(makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, side)==true)
-                    {
+                    if (makeMove.makeMove(fromRow, fromCol, toRow, toCol, boardState, side) == true) {
                         WriteBoardToFile(boardState);
                         sendBoard();
-                        turn=false;
+                        turn = false;
                     }
                 }
                 fromRow = -1;
@@ -365,15 +349,35 @@ public class Player extends JFrame {
             Thread messageReceiverThread = new Thread(() -> {
                 try {
                     ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                    // ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                     String player = (String) inputStream.readObject();
-                    if (player.equals("2"))
-                    {
+                    if (player.equals("2")) {
+                        System.out.println("player 2");
                         side = -1;
                         turn = false;
+
+
+                        // Đọc userid của đối phương từ server
+                        
+
+                        // Gửi userid của client cho server
+                        outputStream.writeObject("id2");
+
+                        String idEnemy=(String) inputStream.readObject();
+                        
+                        System.out.println("Id đối thủ: " + idEnemy);
+                    } else {
+                        System.out.println("player 1");
+                        side = 1;
+
+                        // // Gửi userid của client cho server
+                        outputStream.writeObject("id1");
+
+                        // // Đọc userid của đối phương từ server
+                        String idEnemy = (String) inputStream.readObject();
+                        System.out.println("Id đối thủ: " + idEnemy);
                     }
-                    else{
-                        side=1;
-                    }
+
                     while (true) {
 
                         String fromServer;
@@ -398,4 +402,3 @@ public class Player extends JFrame {
         });
     }
 }
-

@@ -20,18 +20,19 @@ public class ServerV2 {
             while (true) {
                 Socket clientSocket_1 = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket_1.getInetAddress().getHostAddress());
-
                 ObjectInputStream inputStream_1 = new ObjectInputStream(clientSocket_1.getInputStream());
                 ObjectOutputStream outputStream_1 = new ObjectOutputStream(clientSocket_1.getOutputStream());
+                // outputStream_1.writeObject("1");
 
                 Socket clientSocket_2 = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket_2.getInetAddress().getHostAddress());
-
                 ObjectInputStream inputStream_2 = new ObjectInputStream(clientSocket_2.getInputStream());
                 ObjectOutputStream outputStream_2 = new ObjectOutputStream(clientSocket_2.getOutputStream());
+                // outputStream_2.writeObject("2");
 
                 // Tạo và lưu trữ một cặp client mới
-                ClientHandler clientHandler = new ClientHandler(clientSocket_1, inputStream_1, outputStream_1, clientSocket_2, inputStream_2, outputStream_2);
+                ClientHandler clientHandler = new ClientHandler(clientSocket_1, inputStream_1, outputStream_1,
+                        clientSocket_2, inputStream_2, outputStream_2);
                 clients.add(clientHandler);
 
                 // Bắt đầu xử lý cặp client mới
@@ -52,7 +53,7 @@ public class ServerV2 {
         private ObjectOutputStream outputStream2;
 
         public ClientHandler(Socket clientSocket1, ObjectInputStream inputStream1, ObjectOutputStream outputStream1,
-                            Socket clientSocket2, ObjectInputStream inputStream2, ObjectOutputStream outputStream2) {
+                Socket clientSocket2, ObjectInputStream inputStream2, ObjectOutputStream outputStream2) {
             this.clientSocket1 = clientSocket1;
             this.inputStream1 = inputStream1;
             this.outputStream1 = outputStream1;
@@ -64,8 +65,34 @@ public class ServerV2 {
         @Override
         public void run() {
             try {
+                
+
+                // // Nhận userid từ client thứ nhất
+                // String player1id = (String) inputStream1.readObject();
+                // System.out.println("player1id=" + player1id);
+
+                // // Gửi userid của client thứ nhất cho client thứ hai
+                // outputStream2.writeObject(player1id);
+
+                // // Nhận userid từ client thứ hai
+                // String player2id = (String) inputStream2.readObject();
+                // System.out.println("player2id=" + player2id);
+
+                // // Gửi userid của client thứ hai cho client thứ nhất
+                // outputStream1.writeObject(player2id);
                 outputStream1.writeObject("1");
+                String player1id = (String) inputStream1.readObject();
+                System.out.println("player1id=" + player1id);
+
+                
+
                 outputStream2.writeObject("2");
+                String player2id = (String) inputStream2.readObject();
+                System.out.println("player2id=" + player2id);
+                
+                
+                outputStream2.writeObject(player1id);
+                outputStream1.writeObject(player2id);
 
                 String message;
                 while (true) {
