@@ -5,7 +5,7 @@ import java.net.*;
 
 public class client {
     // Địa chỉ IP của server
-    private static String SERVER_ID = "192.168.76.101";
+    private static String SERVER_ID = "localhost";
     // Cổng mà server lắng nghe kết nối
     private static int SERVER_PORT = 12345;
 
