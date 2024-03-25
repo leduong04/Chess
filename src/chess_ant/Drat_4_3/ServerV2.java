@@ -8,17 +8,53 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import chess_ant.EloCalculator;
+
 public class ServerV2 {
     private static final int SERVER_PORT = 12345;
     private static List<ClientHandler> clients = new ArrayList<>();
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/projectjava";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
+
+    public static int getUserElo(String userId) {
+        int elo = 0;
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
+            String sql = "SELECT elo FROM users WHERE userid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, userId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        elo = rs.getInt("elo");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return elo;
+    }
+    public static void updateElo(String userId, int newElo) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
+            String sql = "UPDATE users SET elo = ? WHERE userid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, newElo);
+                pstmt.setString(2, userId);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     private static boolean insertGameData(String player1id, String player2id, String winnerid, String FEN) {
         boolean success = false;
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projectjava", "root", "")) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
             String sql = "INSERT INTO games (player1id, player2id, winnerid, FEN) VALUES (?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, player1id);
@@ -124,7 +160,9 @@ public class ServerV2 {
                 outputStream2.writeObject(player1id);
                 outputStream1.writeObject(player2id);
 
-                
+                int elo1=getUserElo(player1id);
+                int elo2=getUserElo(player2id);
+
 
                 String message;
                 while (true) {
@@ -138,6 +176,13 @@ public class ServerV2 {
                             } else {
                                 System.out.println("Insert thất bại!");
                             }
+
+
+                            updateElo(player1id, EloCalculator.calculateElo(elo1, elo2, 1));
+                            updateElo(player2id, EloCalculator.calculateElo(elo2,elo1,0));
+
+                            System.out.println("new elo1:"+EloCalculator.calculateElo(elo1, elo2, 1));
+                            System.out.println("new elo2:"+EloCalculator.calculateElo(elo2,elo1,0));
                         }
                     }
 
@@ -152,6 +197,11 @@ public class ServerV2 {
                             } else {
                                 System.out.println("Insert thất bại!");
                             }
+                            updateElo(player1id, EloCalculator.calculateElo(elo1, elo2, 0));
+                            updateElo(player2id, EloCalculator.calculateElo(elo2,elo1,1));
+
+                            System.out.println("new elo1:"+EloCalculator.calculateElo(elo1, elo2, 0));
+                            System.out.println("new elo2:"+EloCalculator.calculateElo(elo2,elo1,1));
                         }
                     }
                 }
