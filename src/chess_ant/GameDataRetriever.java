@@ -1,10 +1,10 @@
 package chess_ant;
 
-
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class GameDataRetriever {
@@ -31,10 +31,22 @@ public class GameDataRetriever {
 
         retrieveGameData(isLoggedin.isLoggedin(), model);
 
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)); // Panel chứa nút "Đóng"
+        JButton closeButton = new JButton("Đóng");
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Đóng cửa sổ khi nút "Đóng" được nhấn
+            }
+        });
+        buttonPanel.add(closeButton); // Thêm nút "Đóng" vào panel
+
+        frame.add(buttonPanel, BorderLayout.SOUTH); // Thêm panel chứa nút "Đóng" vào phần dưới của cửa sổ
+
         frame.setVisible(true);
 
         JPanel playerStatsPanel = new JPanel(new GridLayout(3, 2));
-        frame.add(playerStatsPanel, BorderLayout.SOUTH);
+        frame.add(playerStatsPanel, BorderLayout.NORTH); // Thêm panel thông tin người chơi vào phần trên của cửa sổ
 
         displayPlayerStats(isLoggedin.isLoggedin(), playerStatsPanel);
     }
