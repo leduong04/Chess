@@ -11,12 +11,13 @@ public class MainMenu extends JFrame implements ActionListener {
     private JButton viewHistoryButton; 
     private JButton viewLeaderboardButton; 
     private JButton logoutButton; 
+    private JButton registerButton; // Thêm nút Đăng ký
 
     public MainMenu() {
         setTitle("Main Menu");
-        setSize(400, 350); 
+        setSize(400, 400); // Thay đổi kích thước cho phù hợp với giao diện mới
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(6, 1)); 
+        setLayout(new GridLayout(7, 1)); // Thêm một hàng cho nút Đăng ký
 
         getContentPane().setBackground(new Color(240, 240, 240));
 
@@ -26,6 +27,7 @@ public class MainMenu extends JFrame implements ActionListener {
         viewHistoryButton = createStyledButton("Xem lịch sử các trận");
         viewLeaderboardButton = createStyledButton("Xem bảng xếp hạng");
         logoutButton = createStyledButton("Đăng xuất"); 
+        registerButton = createStyledButton("Đăng ký"); // Khởi tạo nút Đăng ký
 
         loginButton.addActionListener(this);
         playWithBotButton.addActionListener(this);
@@ -33,12 +35,17 @@ public class MainMenu extends JFrame implements ActionListener {
         viewHistoryButton.addActionListener(this);
         viewLeaderboardButton.addActionListener(this);
         logoutButton.addActionListener(this); 
+        registerButton.addActionListener(this); // Thêm sự kiện cho nút Đăng ký
+
+        add(registerButton);
         add(loginButton);
         add(playWithBotButton);
         add(playWithRandomPlayerButton);
         add(viewHistoryButton);
         add(viewLeaderboardButton);
         add(logoutButton); 
+        // Thêm nút Đăng ký vào giao diện
+
         setVisible(true);
     }
 
@@ -53,7 +60,12 @@ public class MainMenu extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
+        if (e.getSource() == registerButton)
+        {
+            JOptionPane.showMessageDialog(this, "Bạn đã chọn đăng ký.");
+            RegisterForm.main(null);
+        }
+        else if (e.getSource() == loginButton) {
             if (isLoggedIn()) {
                 JOptionPane.showMessageDialog(this, "Bạn đã đăng nhập.");
                 disposeLoginDialog();
@@ -95,8 +107,10 @@ public class MainMenu extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == viewLeaderboardButton) {
             JOptionPane.showMessageDialog(this, "Bạn đã chọn Xem bảng xếp hạng.");
+            PlayerRankingGUI.main(null);
         } else if (e.getSource() == logoutButton) {
             JOptionPane.showMessageDialog(this, "Bạn đã chọn Đăng xuất.");
+            LogOut.main(null);
         }
     }
 
