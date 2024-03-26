@@ -18,9 +18,13 @@ public class RegisterForm extends JFrame implements ActionListener {
 
     public RegisterForm() {
         setTitle("Register");
-        setSize(300, 200);
+        setSize(400, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new GridLayout(5, 2));
+        setLayout(new GridLayout(6, 2));
+        setLocationRelativeTo(null); // Hiển thị cửa sổ ở giữa màn hình
+
+        JLabel titleLabel = new JLabel("Đăng Ký");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Đặt font chữ và kích thước
 
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
@@ -32,9 +36,11 @@ public class RegisterForm extends JFrame implements ActionListener {
         confirmPasswordField = new JPasswordField();
         emailField = new JTextField();
 
-        registerButton = new JButton("Register");
+        registerButton = new JButton("Đăng Ký");
         registerButton.addActionListener(this);
 
+        add(titleLabel);
+        add(new JLabel());
         add(usernameLabel);
         add(usernameField);
         add(passwordLabel);
@@ -46,6 +52,7 @@ public class RegisterForm extends JFrame implements ActionListener {
         add(new JLabel());
         add(registerButton);
 
+        getContentPane().setBackground(new Color(240, 240, 240)); // Đặt màu nền
         setVisible(true);
     }
 
