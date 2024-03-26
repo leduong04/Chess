@@ -30,22 +30,31 @@ public class GameDataRetriever {
 
         retrieveGameData(isLoggedin.isLoggedin(), model);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)); // Panel chứa nút "Đóng"
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)); 
         JButton closeButton = new JButton("Đóng");
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.dispose(); // Đóng cửa sổ khi nút "Đóng" được nhấn
+                frame.dispose(); 
             }
         });
-        buttonPanel.add(closeButton); // Thêm nút "Đóng" vào panel
+        buttonPanel.add(closeButton); 
 
-        frame.add(buttonPanel, BorderLayout.SOUTH); // Thêm panel chứa nút "Đóng" vào phần dưới của cửa sổ
+        JButton editButton = new JButton("Sửa thông tin của người chơi");
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EditUserDialogMain.main(null); 
+            }
+        });
+        buttonPanel.add(editButton);
+
+        frame.add(buttonPanel, BorderLayout.SOUTH); 
 
         frame.setVisible(true);
 
-        JPanel playerStatsPanel = new JPanel(new GridLayout(5, 2)); // Đổi layout của panel thông tin người chơi
-        frame.add(playerStatsPanel, BorderLayout.NORTH); // Thêm panel thông tin người chơi vào phần trên của cửa sổ
+        JPanel playerStatsPanel = new JPanel(new GridLayout(5, 2));
+        frame.add(playerStatsPanel, BorderLayout.NORTH); 
 
         displayPlayerStats(isLoggedin.isLoggedin(), playerStatsPanel);
     }
