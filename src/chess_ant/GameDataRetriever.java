@@ -1,5 +1,4 @@
 package chess_ant;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -45,7 +44,7 @@ public class GameDataRetriever {
 
         frame.setVisible(true);
 
-        JPanel playerStatsPanel = new JPanel(new GridLayout(3, 2));
+        JPanel playerStatsPanel = new JPanel(new GridLayout(5, 2)); // Đổi layout của panel thông tin người chơi
         frame.add(playerStatsPanel, BorderLayout.NORTH); // Thêm panel thông tin người chơi vào phần trên của cửa sổ
 
         displayPlayerStats(isLoggedin.isLoggedin(), playerStatsPanel);
@@ -91,7 +90,8 @@ public class GameDataRetriever {
 
     private static void displayPlayerStats(int userId, JPanel playerStatsPanel) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
-            String sql = "SELECT COUNT(*) AS totalGames, " +
+            String sql = "SELECT username, password, email, " +
+                    "COUNT(*) AS totalGames, " +
                     "SUM(CASE WHEN games.winnerid = ? THEN 1 ELSE 0 END) AS wins, " +
                     "elo " +
                     "FROM games " +
@@ -102,16 +102,25 @@ public class GameDataRetriever {
                 preparedStatement.setInt(2, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
+                    String username = resultSet.getString("username");
+                    String password = resultSet.getString("password");
+                    String email = resultSet.getString("email");
                     int totalGames = resultSet.getInt("totalGames");
                     int wins = resultSet.getInt("wins");
                     int elo = resultSet.getInt("elo");
 
+                    JLabel usernameLabel = new JLabel("Username: " + username);
+                    JLabel passwordLabel = new JLabel("Password: " + password);
+                    JLabel emailLabel = new JLabel("Email: " + email);
                     JLabel totalGamesLabel = new JLabel("Tổng số ván: " + totalGames);
                     JLabel winsLabel = new JLabel("Số ván thắng: " + wins);
                     JLabel winRateLabel = new JLabel(
                             "Tỷ lệ thắng: " + (totalGames > 0 ? (wins * 100 / totalGames) : 0) + "%");
                     JLabel eloLabel = new JLabel("ELO: " + elo);
 
+                    playerStatsPanel.add(usernameLabel);
+                    playerStatsPanel.add(passwordLabel);
+                    playerStatsPanel.add(emailLabel);
                     playerStatsPanel.add(totalGamesLabel);
                     playerStatsPanel.add(winsLabel);
                     playerStatsPanel.add(winRateLabel);
