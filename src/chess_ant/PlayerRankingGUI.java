@@ -1,7 +1,10 @@
 package chess_ant;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class PlayerRankingGUI extends JFrame {
@@ -24,6 +27,17 @@ public class PlayerRankingGUI extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         retrievePlayerRanking(model);
+
+        JButton closeButton = new JButton("Đóng"); // Tạo nút "Đóng"
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Đóng cửa sổ khi nút "Đóng" được nhấn
+            }
+        });
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(closeButton); // Thêm nút "Đóng" vào panel
+        add(buttonPanel, BorderLayout.SOUTH); // Thêm panel chứa nút "Đóng" vào phần dưới của cửa sổ
 
         setVisible(true);
     }
@@ -51,5 +65,3 @@ public class PlayerRankingGUI extends JFrame {
         SwingUtilities.invokeLater(PlayerRankingGUI::new);
     }
 }
-
-
