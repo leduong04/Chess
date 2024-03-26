@@ -9,26 +9,26 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class EditUserDialogMain  extends JDialog {
+public class EditUserDialogMain extends JDialog {
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private JPasswordField confirmPasswordField; // Thêm confirmPasswordField
     private JTextField emailField;
     private int userId;
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/projectjava";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
 
-
     public EditUserDialogMain(JFrame parent, int userId) {
         super(parent, "Sửa thông tin người dùng", true);
         this.userId = userId;
-        setSize(300, 200);
+        setSize(300, 250); // Tăng kích thước để chứa confirmPasswordField
         setLocationRelativeTo(parent);
         initComponents();
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel(new GridLayout(4, 2));
+        JPanel panel = new JPanel(new GridLayout(5, 2)); // Thay đổi layout để chứa confirmPasswordField
 
         JLabel usernameLabel = new JLabel("Tên đăng nhập:");
         usernameField = new JTextField(15);
@@ -39,6 +39,11 @@ public class EditUserDialogMain  extends JDialog {
         passwordField = new JPasswordField(15);
         panel.add(passwordLabel);
         panel.add(passwordField);
+
+        JLabel confirmPasswordLabel = new JLabel("Xác nhận mật khẩu:"); // Label cho confirmPasswordField
+        confirmPasswordField = new JPasswordField(15);
+        panel.add(confirmPasswordLabel);
+        panel.add(confirmPasswordField);
 
         JLabel emailLabel = new JLabel("Email:");
         emailField = new JTextField(15);
@@ -69,6 +74,14 @@ public class EditUserDialogMain  extends JDialog {
 
     private void saveChanges() {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+            String newPassword = new String(passwordField.getPassword()); 
+            String confirmedPassword = new String(confirmPasswordField.getPassword()); 
+
+            if (!newPassword.equals(confirmedPassword)) { 
+                JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không trùng khớp!");
+                return;
+            }
+
             StringBuilder sql = new StringBuilder("UPDATE users SET ");
             boolean hasChanges = false;
 
@@ -77,7 +90,7 @@ public class EditUserDialogMain  extends JDialog {
                 hasChanges = true;
             }
 
-            if (passwordField.getPassword().length > 0) {
+            if (newPassword.length() > 0) { 
                 sql.append("password = ?, ");
                 hasChanges = true;
             }
@@ -96,8 +109,8 @@ public class EditUserDialogMain  extends JDialog {
                     if (!usernameField.getText().isEmpty()) {
                         preparedStatement.setString(parameterIndex++, usernameField.getText());
                     }
-                    if (passwordField.getPassword().length > 0) {
-                        preparedStatement.setString(parameterIndex++, new String(passwordField.getPassword()));
+                    if (newPassword.length() > 0) { 
+                        preparedStatement.setString(parameterIndex++, newPassword);
                     }
                     if (!emailField.getText().isEmpty()) {
                         preparedStatement.setString(parameterIndex++, emailField.getText());
