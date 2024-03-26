@@ -6,15 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-//file này thực thi các nước của người chơi và hiển thị giao diện bàn cờ
 public class PlayVsAi extends JFrame {
     private static JLabel[][] chessCells = new JLabel[8][8];
     private static String[][] boardState = new String[8][8];
     private int fromRow = -1, fromCol = -1;
     public static int bot = 0;
     public static boolean turn;
-    // bot = 1: Bot is Black
-    // bot = -1: Bot is White
+    
 
     public PlayVsAi() {
         setTitle("Real-time Chess Board");
@@ -71,8 +69,7 @@ public class PlayVsAi extends JFrame {
 
     private void updateBoardFromFile() {
 
-        // System.out.println("UPDATE");
-        // boardState = ReadBoardFromFile.ReadBoardFromFile();
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (i == 1) {
@@ -117,8 +114,7 @@ public class PlayVsAi extends JFrame {
                 chessCells[i][j].setIcon(icon);
             }
         }
-        // whoWon.displayWinner(boardState);
-        // whoWon.displayWinner(ReadBoardFromFile.ReadBoardFromFile());
+        
     }
 
     private class ChessCellClickListener extends MouseAdapter {
@@ -142,6 +138,8 @@ public class PlayVsAi extends JFrame {
                     {
                         updateChessBoard();
                         turn = false;
+
+                        whoWon.displayWinner(boardState);
                     }
                 }
 
@@ -150,6 +148,8 @@ public class PlayVsAi extends JFrame {
 
                     updateChessBoard();
                     turn = true;
+
+                    whoWon.displayWinner(boardState);
                 }
 
                 fromRow = -1;
@@ -225,16 +225,6 @@ public class PlayVsAi extends JFrame {
             PlayVsAi chessBoard = new PlayVsAi();
             chessBoard.setVisible(true);
 
-            // if(bot==-1&&first==true)
-            // {
-            // for(int i=0; i<100000; i++)
-            // {
-            // System.out.println(i);
-            // }
-            // Chess_AI.Chess_AI(boardState, -1);
-            // updateChessBoard();
-            // first=false;
-            // }
         });
     }
 

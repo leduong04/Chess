@@ -5,21 +5,18 @@ public class Chess_AI {
         int whiteScore = 0;
         int blackScore = 0;
 
-        // Gán giá trị cho từng loại quân cờ
         int pawnValue = 1;
         int knightValue = 3;
         int bishopValue = 3;
         int rookValue = 5;
         int queenValue = 9;
         int kingValue = 10;
-        // Duyệt qua bàn cờ và tính tổng giá trị cho cả hai bên
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 String piece = board[i][j];
                 if (!piece.equals("| |")) {
                     int pieceValue = 0;
 
-                    // Gán giá trị cho từng loại quân cờ
                     if (piece.equals("P") || piece.equals("p")) {
                         pieceValue = pawnValue;
                     } else if (piece.equals("N") || piece.equals("n")) {
@@ -42,13 +39,11 @@ public class Chess_AI {
             }
         }
 
-        // Trả về hiệu số điểm giữa hai bên
 
         return whiteScore - blackScore;
     }
 
-    // -1: White
-    // 1: Black
+   
     public static int checkWin(String[][] board, int bot) {
         int k = 0;
         int K = 0;
@@ -94,17 +89,7 @@ public class Chess_AI {
         return chars;
     }
 
-    // board là bàn cờ có dạng như sau:
-    // String[][]board = {{"R", "N", "B", "Q", "K", "B", "N", "R"},
-    //         {"P", "P", "P", "P", "P", "P", "P", "P"},
-    //         {"| |", "| |", "| |", "| |", "| |","| |","| |","| |",},
-    //         {"| |", "| |", "| |", "| |", "| |","| |","| |","| |",},
-    //         {"| |", "| |", "| |", "| |", "| |","| |","| |","| |",},
-    //         {"| |", "| |", "| |", "| |", "| |","| |","| |","| |",},
-    //         {"p", "p", "p", "p", "p", "p", "p", "p"},
-    //         {"r", "n", "b", "q", "k", "b", "n", "r"}};
-    // => tất cả các ô trống sẽ đặt là "| |"
-    // bot = -1 thì AI là bên white, bot = 1 thì AI là bên black
+    
     public static int[] Chess_AI(String[][] board, int bot) {
         int bestScore = Integer.MIN_VALUE;
         int[] bestMove = new int[4];
@@ -138,11 +123,7 @@ public class Chess_AI {
     
         makeMove(board, bestMove[0], bestMove[1], bestMove[2], bestMove[3]);
 
-        // Trả về:
-        // bestMove[0]: tọa độ hàng của quân được Chọn
-        // bestMove[1]: tọa độ cột của quân được Chọn
-        // bestMove[2]: tọa độ hàng của điểm đến
-        // bestMove[3]: tọa độ cột của điểm đến
+        
         return bestMove;
     }
     
@@ -184,7 +165,6 @@ public class Chess_AI {
         return bestValue;
     }
     
-    // Helper function to clone the board
     private static String[][] cloneBoard(String[][] board) {
         String[][] newBoard = new String[8][8];
         for (int i = 0; i < 8; i++) {
@@ -195,17 +175,11 @@ public class Chess_AI {
         return newBoard;
     }
     
-    // Helper function to make a move on the board
     private static void makeMove(String[][] board, int fromRow, int fromCol, int toRow, int toCol) {
         board[toRow][toCol] = board[fromRow][fromCol];
         board[fromRow][fromCol] = "| |";
     }
     
     
-    // public static void main(String[] args) {
-    // int result[] = HandleForBlack(ReadBoardFromFile.ReadBoardFromFile());
-    // for (int i = 0; i < 4; i++) {
-    // System.err.println(result[i]);
-    // }
-    // }
+    
 }
