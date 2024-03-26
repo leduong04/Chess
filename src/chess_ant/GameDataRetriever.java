@@ -13,23 +13,23 @@ public class GameDataRetriever {
     private static final String PASSWORD = "";
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Game Data");
+        JFrame frame = new JFrame("CÁC VÁN ĐẤU");
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("STT");
-        model.addColumn("Player1");
-        model.addColumn("Player2");
-        model.addColumn("Winner");
+        model.addColumn("Bên Trắng");
+        model.addColumn("Bên Đen");
+        model.addColumn("Người thắng");
         model.addColumn("FEN");
-        model.addColumn("Date");
+        model.addColumn("Ngày");
 
         JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        retrieveGameData(isLoggedin.isLoggedin(), model); // Replace '1' with the desired userid
+        retrieveGameData(isLoggedin.isLoggedin(), model);
 
         frame.setVisible(true);
 
@@ -94,10 +94,10 @@ public class GameDataRetriever {
                     int wins = resultSet.getInt("wins");
                     int elo = resultSet.getInt("elo");
 
-                    JLabel totalGamesLabel = new JLabel("Total Games: " + totalGames);
-                    JLabel winsLabel = new JLabel("Wins: " + wins);
+                    JLabel totalGamesLabel = new JLabel("Tổng số ván: " + totalGames);
+                    JLabel winsLabel = new JLabel("Số ván thắng: " + wins);
                     JLabel winRateLabel = new JLabel(
-                            "Win Rate: " + (totalGames > 0 ? (wins * 100 / totalGames) : 0) + "%");
+                            "Tỷ lệ thắng: " + (totalGames > 0 ? (wins * 100 / totalGames) : 0) + "%");
                     JLabel eloLabel = new JLabel("ELO: " + elo);
 
                     playerStatsPanel.add(totalGamesLabel);
