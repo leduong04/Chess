@@ -1,8 +1,0 @@
-RNBQ BNR
-PPPP PPP
-   KP   
-        
-   p    
-    p   
-ppp  ppp
-rnbqkbnr

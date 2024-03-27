@@ -1,8 +1,0 @@
-Me: 8
-You: 7
-Me: 4
-You: 7
-You: 5
-Me: j
-You: 7
-Me: 8

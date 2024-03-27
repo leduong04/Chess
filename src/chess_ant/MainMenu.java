@@ -14,7 +14,7 @@ public class MainMenu extends JFrame implements ActionListener {
     private JButton registerButton; // Thêm nút Đăng ký
 
     public MainMenu() {
-        setTitle("Main Menu");
+        setTitle("CHESS");
         setSize(400, 400); // Thay đổi kích thước cho phù hợp với giao diện mới
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(7, 1)); // Thêm một hàng cho nút Đăng ký

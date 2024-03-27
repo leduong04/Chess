@@ -1,1 +1,8 @@
 /build/
+/src/chess_ant/BaiTap13_Client/BaiTap13_Client/build/
+/src/chess_ant/BaiTap13_Client/BaiTap13_Client/dist/
+/src/chess_ant/BaiTap13_Client/BaiTap13_Client/nbproject/private/
+/src/chess_ant/BaiTap13_Server/BaiTap13_Server/build/
+/src/chess_ant/BaiTap13_Server/BaiTap13_Server/dist/
+/src/chess_ant/BaiTap13_Server/BaiTap13_Server/nbproject/private/
+/dist/

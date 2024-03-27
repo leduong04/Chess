@@ -15,7 +15,7 @@ public class PlayVsAi extends JFrame {
     
 
     public PlayVsAi() {
-        setTitle("Real-time Chess Board");
+        setTitle("Play with Computer");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(8, 8));

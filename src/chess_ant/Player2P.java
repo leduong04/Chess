@@ -39,7 +39,7 @@ public class Player2P extends JFrame {
     private static final String PASSWORD = "";
 
     public Player2P() {
-        setTitle("Real-time Chess Board");
+        setTitle("Chơi với người");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(8, 8));
